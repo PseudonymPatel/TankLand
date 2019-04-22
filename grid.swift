@@ -3,7 +3,7 @@
 *	Included here is the code for drawing the grid, and all classes and helper functions related.
 *
 *	** Grid Class **
-*	
+*	*Also a override for the * operator
 */
 class Grid {
 
@@ -16,8 +16,8 @@ class Grid {
 	private let GRID_WIDTH:Int = 15
 
 	//sets the spacing required inside each box.
-	private let HORIZONTAL_SPACING:Int = 5
-	private let VERTICAL_SPACING:Int = 3
+	private let HORIZONTAL_SPACING:Int = 5 //this must be greater than 5
+	private let VERTICAL_SPACING:Int = 3 //this must be greater than 0, if less than 2, some info will be removed to fit.
 
 	//all characters required to create the grid
 	//for a list of characters go to: https://jrgraphix.net/r/Unicode/2500-257F
@@ -122,61 +122,38 @@ class Grid {
 
 				//iterates through each element in the row, creating the second line in the row
 				for col in 0..<GRID_WIDTH {
-					if col == GRID_WIDTH - 1 { //it is last element, add extra closing characters and line break
-						tempLine += VERTICAL_POLE
-						switch line { //display health
-							case 0:
-								if let object = grid[row][col] {
-									tempLine += (String(object.energy) + " "*(HORIZONTAL_SPACING-String(object.energy).count) + RIGHT_EDGE) //the energy plus how ever many extra spaces are needed.
-								} else {
-									tempLine += ((" "*HORIZONTAL_SPACING) + RIGHT_EDGE) //add blank space of right length
-								}
-							case 1://display name
-								if let object = grid[row][col] {
-									tempLine += (object.name + " "*(HORIZONTAL_SPACING-object.name.count) + RIGHT_EDGE) //the energy plus how ever many extra spaces are needed.
-								} else {
-									tempLine += ((" "*HORIZONTAL_SPACING) + RIGHT_EDGE)
-								}
-							default: //if it is not the first or second line, put blank spaces.
-								tempLine += ((" "*HORIZONTAL_SPACING) + RIGHT_EDGE)
-						}
-						tempLine += "\n" //this is the end of a line, so we need to put a line break
-					} else if col == 0 { //it is first element: draw a entrance characters, then do normally.
+
+					if col == 0 { //always start the line with a character, if first line, use the edge character.
 						tempLine += LEFT_EDGE
-						switch line { //display health
-							case 0:
-								if let object = grid[row][col] {
-									tempLine += (String(object.energy) + " "*(HORIZONTAL_SPACING-String(object.energy).count)) //the energy plus how ever many extra spaces are needed.
-								} else {
-									tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
-								}
-							case 1://display name
-								if let object = grid[row][col] {
-									tempLine += (object.name + " "*(HORIZONTAL_SPACING-object.name.count)) //the energy plus how ever many extra spaces are needed.
-								} else {
-									tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
-								}
-							default: //if it is not the first or second line, put blank spaces.
+					} else {
+						tempLine += VERTICAL_POLE
+					}
+					
+					//The switch statement decides which information to store on the line.
+					// 0th line - shows health
+					// 1st line - name
+					// 2nd line - coordinates
+					switch line {
+						case 0: //display the health
+							if let object = grid[row][col] {
+								tempLine += (" "*(HORIZONTAL_SPACING-String(object.energy).count) + String(object.energy)) //the energy plus how ever many extra spaces are needed.
+							} else {
+								tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
+							}
+						case 1://display name
+							if let object = grid[row][col] {
+								tempLine += (object.name + " "*(HORIZONTAL_SPACING-object.name.count)) //the name plus how ever many extra spaces are needed.
+							} else {
 								tempLine += (" "*HORIZONTAL_SPACING)
-						}
-					} else { //draw a middle intersection piece, then display the part
-						tempLine += VERTICAL_POLE //add because it must be first no matter what
-						switch line { //display health
-							case 0:
-								if let object = grid[row][col] {
-									tempLine += (String(object.energy) + " "*(HORIZONTAL_SPACING-String(object.energy).count)) //the energy plus how ever many extra spaces are needed.
-								} else {
-									tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
-								}
-							case 1://display name
-								if let object = grid[row][col] {
-									tempLine += (object.name + " "*(HORIZONTAL_SPACING-object.name.count)) //the energy plus how ever many extra spaces are needed.
-								} else {
-									tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
-								}
-							default: //if it is not the first or second line, put blank spaces.
-								tempLine += (" "*HORIZONTAL_SPACING)
-						}
+							}
+						case 2: //display the position on the grid
+							tempLine += (" "*HORIZONTAL_SPACING)
+						default: //if it is not the first or second line, put blank spaces.
+							tempLine += (" "*HORIZONTAL_SPACING)
+					}
+				
+					if col == GRID_HEIGHT - 1 {
+						tempLine += (RIGHT_EDGE) //this is the end of a line, so we need to put a final character
 					}
 				}
 
@@ -184,16 +161,15 @@ class Grid {
 				tempLines.append(tempLine)
 			}
 		
-			//draw the VERTICAL_SPACING number lines that were just generated
-			for i in tempLines {
-				print(i, terminator:"")
-			}
-
+		//draw the VERTICAL_SPACING number lines that were just generated
+		for i in tempLines {
+			print(i) //because no line break is added to the end of the line, it is put in here using the print statement
 		}
-		//draw the bottom row stuff
-		drawLine(firstCharacter:BOTTOM_LEFT_CORNER, line:BOTTOM_EDGE, intersection:BOTTOM_EDGE_INTERSECTION, lastCharacter:BOTTOM_RIGHT_CORNER)
+		
+		}
+	//finally, draw the bottom row stuff
+	drawLine(firstCharacter:BOTTOM_LEFT_CORNER, line:BOTTOM_EDGE, intersection:BOTTOM_EDGE_INTERSECTION, lastCharacter:BOTTOM_RIGHT_CORNER)
 	}
-
 	//adds a new GameObject to the grid
 	//PRECONDITION: the row and col are valid values.
 	//@param object the object to add
