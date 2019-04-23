@@ -11,13 +11,15 @@ class Grid {
 	//Properties
 	// ---------------------------------------------------------
 	
+	//you may set this to true if you would like all the boxes to have a coordinate in it. 
+	private let coordsInEveryBox:Bool = false
 	//Height and width of the grid - amount of elements per row/col
 	private let GRID_HEIGHT:Int = 15
 	private let GRID_WIDTH:Int = 15
 
 	//sets the spacing required inside each box.
-	private let HORIZONTAL_SPACING:Int = 5 //this must be greater than 5
-	private let VERTICAL_SPACING:Int = 3 //this must be greater than 0, if less than 2, some info will be removed to fit.
+	private let HORIZONTAL_SPACING:Int = 8 //this must be greater than 5
+	private let VERTICAL_SPACING:Int = 4 //this must be greater than 0, if less than 2, some info will be removed to fit.
 
 	//all characters required to create the grid
 	//for a list of characters go to: https://jrgraphix.net/r/Unicode/2500-257F
@@ -46,13 +48,13 @@ class Grid {
 	// Initializers
 	// ---------------------------------------------------------
 
-	//Initializes the grid array with an empty array. There is no need for a predefined length and width.
+	//Initializes the grid array with an empty array of predefined length and width.
 	init() {
 		grid = Array(repeating: Array(repeating: nil, count: GRID_WIDTH), count: GRID_HEIGHT)
 	}
 
 	// ---------------------------------------------------------
-	//Accessor methods
+	// Accessor methods
 	// ---------------------------------------------------------
 
 	//@return height of grid
@@ -85,10 +87,12 @@ class Grid {
 		
 		//print the middle section, consisting of:
 		//SPACING amount of characters, then a intersection
-		for _ in 0..<GRID_WIDTH {
+		for _ in 0..<GRID_WIDTH - 1 {
 			print(line*HORIZONTAL_SPACING + intersection, terminator:"")
 		}
-		print("")
+		
+		//for the last one, add a lastCharacter onto the end
+		print(line*HORIZONTAL_SPACING + lastCharacter)
 	}
 
 	//Draws the grid to the terminal, with all GameObjects
@@ -136,18 +140,23 @@ class Grid {
 					switch line {
 						case 0: //display the health
 							if let object = grid[row][col] {
-								tempLine += (" "*(HORIZONTAL_SPACING-String(object.energy).count) + String(object.energy)) //the energy plus how ever many extra spaces are needed.
+								tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String(object.energy)) //the energy plus how ever many extra spaces are needed.
 							} else {
 								tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
 							}
 						case 1://display name
 							if let object = grid[row][col] {
-								tempLine += (object.name + " "*(HORIZONTAL_SPACING-object.name.count)) //the name plus how ever many extra spaces are needed.
+								tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - object.name.count)) //the name plus how ever many extra spaces are needed.
 							} else {
 								tempLine += (" "*HORIZONTAL_SPACING)
 							}
 						case 2: //display the position on the grid
-							tempLine += (" "*HORIZONTAL_SPACING)
+							if grid[row][col] != nil || coordsInEveryBox { //if there is an object, or we want coord in every box, then
+								let coords = "(\(row),\(col))"
+								tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
+							} else {
+								tempLine += (" "*HORIZONTAL_SPACING) //just add blank spacing
+							}
 						default: //if it is not the first or second line, put blank spaces.
 							tempLine += (" "*HORIZONTAL_SPACING)
 					}
