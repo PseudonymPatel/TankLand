@@ -13,6 +13,7 @@ class Grid {
 	
 	//you may set this to true if you would like all the boxes to have a coordinate in it. 
 	private let coordsInEveryBox:Bool = false
+
 	//Height and width of the grid - amount of elements per row/col
 	private let GRID_HEIGHT:Int = 15
 	private let GRID_WIDTH:Int = 15
@@ -179,13 +180,45 @@ class Grid {
 	//finally, draw the bottom row stuff
 	drawLine(firstCharacter:BOTTOM_LEFT_CORNER, line:BOTTOM_EDGE, intersection:BOTTOM_EDGE_INTERSECTION, lastCharacter:BOTTOM_RIGHT_CORNER)
 	}
+
 	//adds a new GameObject to the grid
-	//PRECONDITION: the row and col are valid values.
+	//if row and col are not valid, it will fatal error.
 	//@param object the object to add
 	//@param row the row to add the object to
 	//@param col the column to add the object to
-	func addObject(_ object:GameObject, row:Int, col:Int) {
-		grid[row][col] = object
+	func addObject(_ object:GameObject) {
+		assert(object.position.row < GRID_HEIGHT, "Row is out of bounds for placing of GameObject: \(object)")
+		assert(object.position.col < GRID_WIDTH, "Column is out of bounds for placing of GameObject: \(object)")
+		assert(grid[object.position.row][object.position.col] == nil, "There is already an object: \(String(describing:grid[object.position.row][object.position.col]))")
+		grid[object.position.row][object.position.col] = object
+	}
+
+	//assuming that object, toRow, and toCol, are all valid values!
+	//moves the object `object` to (toRow, toCol)
+	func moveObject(_ object:GameObject, toRow:Int, toCol:Int) {
+		//find the object that needs to be moved.
+		var foundObject:GameObject! //will be inited once object found.
+
+		//search sequentially for object
+		for row in 0..<GRID_HEIGHT {
+			for col in 0..<GRID_WIDTH {
+				if let maybeObject = grid[row][col] { //if object at the grid point
+					if maybeObject.name == object.name { //if they are same object
+						foundObject = maybeObject //classes passed by reference, so they are the same item.
+						grid[row][col] = nil //remove the object here, because it is moving!
+						break
+					}
+				}
+				if foundObject != nil {break} //if the object has been found, break
+			}
+			if foundObject != nil {break} //if object found, break
+		}
+
+		//make sure that there is an object found!
+		assert(foundObject != nil, "The object to move (\(object)) was not found.")
+
+		//add the object to the new space.
+		grid[toRow][toCol] = foundObject
 	}
 }
 
