@@ -19,12 +19,12 @@ class Grid {
 	private let GRID_WIDTH:Int = 15
 
 	//sets the spacing required inside each box.
-	private let HORIZONTAL_SPACING:Int = 8 //this must be greater than 5
-	private let VERTICAL_SPACING:Int = 4 //this must be greater than 0, if less than 2, some info will be removed to fit.
+	private let HORIZONTAL_SPACING:Int = 8 //this must be greater than or equal to 8
+	private let VERTICAL_SPACING:Int = 3 //this must be greater than 0, but if less than 3, some info will be removed to fit.
 
 	//all characters required to create the grid
 	//for a list of characters go to: https://jrgraphix.net/r/Unicode/2500-257F
-	private let TOP_LEFT_CORNER:String = "\u{2554}"
+	private let TOP_LEFT_CORNER:String = "\u{2554}" 
 	private let TOP_RIGHT_CORNER:String = "\u{2557}"
 	private let BOTTOM_LEFT_CORNER:String = "\u{255A}"
 	private let BOTTOM_RIGHT_CORNER:String = "\u{255D}"
