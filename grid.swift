@@ -200,18 +200,16 @@ class Grid {
 		var foundObject:GameObject! //will be inited once object found.
 
 		//search sequentially for object
-		for row in 0..<GRID_HEIGHT {
+		objectFinder: for row in 0..<GRID_HEIGHT {
 			for col in 0..<GRID_WIDTH {
 				if let maybeObject = grid[row][col] { //if object at the grid point
 					if maybeObject.name == object.name { //if they are same object
 						foundObject = maybeObject //classes passed by reference, so they are the same item.
 						grid[row][col] = nil //remove the object here, because it is moving!
-						break
+						break objectFinder // breaks the full loop if object is found
 					}
 				}
-				if foundObject != nil {break} //if the object has been found, break
 			}
-			if foundObject != nil {break} //if object found, break
 		}
 
 		//make sure that there is an object found!
