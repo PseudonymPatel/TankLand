@@ -178,8 +178,6 @@ class Grid {
 	//adds a new GameObject to the grid
 	//if row and col are not valid, it will fatal error.
 	//@param object the object to add
-	//@param row the row to add the object to
-	//@param col the column to add the object to
 	func addObject(_ object:GameObject) {
 		assert(object.position.row < GRID_HEIGHT, "Row is out of bounds for placing of GameObject: \(object)")
 		assert(object.position.col < GRID_WIDTH, "Column is out of bounds for placing of GameObject: \(object)")
