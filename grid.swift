@@ -128,11 +128,8 @@ class Grid {
 				//iterates through each element in the row, creating the second line in the row
 				for col in 0..<GRID_WIDTH {
 
-					if col == 0 { //always start the line with a character, if first line, use the edge character.
-						tempLine += LEFT_EDGE
-					} else {
-						tempLine += VERTICAL_POLE
-					}
+					//always start the line with a character, if first line, use the edge character.
+					tempLine += (col == 0) ? LEFT_EDGE : VERTICAL_POLE 
 					
 					if let object = grid[row][col] {//checks if their is an object
 						//The switch statement decides which information to store on the line.
@@ -140,7 +137,7 @@ class Grid {
 						// 1st line - name
 						// 2nd line - coordinates
 						switch line {
-							case 0: //display the health
+							case 0: //display health
 									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
 									
 							case 1://display name
