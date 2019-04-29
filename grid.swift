@@ -134,32 +134,27 @@ class Grid {
 						tempLine += VERTICAL_POLE
 					}
 					
-					//The switch statement decides which information to store on the line.
-					// 0th line - shows health
-					// 1st line - name
-					// 2nd line - coordinates
-					switch line {
-						case 0: //display the health
-							if let object = grid[row][col] {
-								tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String(object.energy)) //the energy plus how ever many extra spaces are needed.
-							} else {
-								tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
-							}
-						case 1://display name
-							if let object = grid[row][col] {
-								tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - object.name.count)) //the name plus how ever many extra spaces are needed.
-							} else {
+					if let object = grid[row][col] {//checks if their is an object
+						//The switch statement decides which information to store on the line.
+						// 0th line - shows health
+						// 1st line - name
+						// 2nd line - coordinates
+						switch line {
+							case 0: //display the health
+									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
+									
+							case 1://display name
+									tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - 	object.name.count)) //the name plus how ever many extra spaces are needed.
+
+							case 2: //display the position on the grid
+									let coords = "(\(row),\(col))" // pulls from the for loops
+									tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
+							default: //if it is not the first or second line, put blank spaces.
 								tempLine += (" "*HORIZONTAL_SPACING)
-							}
-						case 2: //display the position on the grid
-							if grid[row][col] != nil || coordsInEveryBox { //if there is an object, or we want coord in every box, then
-								let coords = "(\(row),\(col))"
-								tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
-							} else {
-								tempLine += (" "*HORIZONTAL_SPACING) //just add blank spacing
-							}
-						default: //if it is not the first or second line, put blank spaces.
-							tempLine += (" "*HORIZONTAL_SPACING)
+						}
+					} else if (line == 2) && coordsInEveryBox {//checks if position is displayed and display all coords is true
+					} else { //defaults to blank space
+						tempLine += (" "*HORIZONTAL_SPACING) // add blank space of right length
 					}
 				
 					if col == GRID_WIDTH - 1 {
