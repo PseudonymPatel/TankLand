@@ -19,12 +19,12 @@ class Grid {
 	private let GRID_WIDTH:Int = 15
 
 	//sets the spacing required inside each box.
-	private let HORIZONTAL_SPACING:Int = 8 //this must be greater than 5
-	private let VERTICAL_SPACING:Int = 4 //this must be greater than 0, if less than 2, some info will be removed to fit.
+	private let HORIZONTAL_SPACING:Int = 8 //this must be greater than or equal to 8
+	private let VERTICAL_SPACING:Int = 3 //this must be greater than 0, but if less than 3, some info will be removed to fit.
 
 	//all characters required to create the grid
 	//for a list of characters go to: https://jrgraphix.net/r/Unicode/2500-257F
-	private let TOP_LEFT_CORNER:String = "\u{2554}"
+	private let TOP_LEFT_CORNER:String = "\u{2554}" 
 	private let TOP_RIGHT_CORNER:String = "\u{2557}"
 	private let BOTTOM_LEFT_CORNER:String = "\u{255A}"
 	private let BOTTOM_RIGHT_CORNER:String = "\u{255D}"
@@ -134,35 +134,32 @@ class Grid {
 						tempLine += VERTICAL_POLE
 					}
 					
-					//The switch statement decides which information to store on the line.
-					// 0th line - shows health
-					// 1st line - name
-					// 2nd line - coordinates
-					switch line {
-						case 0: //display the health
-							if let object = grid[row][col] {
-								tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String(object.energy)) //the energy plus how ever many extra spaces are needed.
-							} else {
-								tempLine += (" "*HORIZONTAL_SPACING) //add blank space of right length
-							}
-						case 1://display name
-							if let object = grid[row][col] {
-								tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - object.name.count)) //the name plus how ever many extra spaces are needed.
-							} else {
+					if let object = grid[row][col] {//checks if their is an object
+						//The switch statement decides which information to store on the line.
+						// 0th line - shows health
+						// 1st line - name
+						// 2nd line - coordinates
+						switch line {
+							case 0: //display the health
+									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
+									
+							case 1://display name
+									tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - 	object.name.count)) //the name plus how ever many extra spaces are needed.
+
+							case 2: //display the position on the grid
+									let coords = "(\(row),\(col))" // pulls from the for loops
+									tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
+							default: //if it is not the first or second line, put blank spaces.
 								tempLine += (" "*HORIZONTAL_SPACING)
-							}
-						case 2: //display the position on the grid
-							if grid[row][col] != nil || coordsInEveryBox { //if there is an object, or we want coord in every box, then
-								let coords = "(\(row),\(col))"
-								tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
-							} else {
-								tempLine += (" "*HORIZONTAL_SPACING) //just add blank spacing
-							}
-						default: //if it is not the first or second line, put blank spaces.
-							tempLine += (" "*HORIZONTAL_SPACING)
+						}
+					} else if (line == 2) && coordsInEveryBox {//checks if position is displayed and display all coords is true
+						let coords = "(\(row),\(col))" // pulls from the for loops
+						tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
+					} else { //defaults to blank space
+						tempLine += (" "*HORIZONTAL_SPACING) // add blank space of right length
 					}
 				
-					if col == GRID_HEIGHT - 1 {
+					if col == GRID_WIDTH - 1 {
 						tempLine += (RIGHT_EDGE) //this is the end of a line, so we need to put a final character
 					}
 				}
@@ -200,18 +197,16 @@ class Grid {
 		var foundObject:GameObject! //will be inited once object found.
 
 		//search sequentially for object
-		for row in 0..<GRID_HEIGHT {
+		objectFinder: for row in 0..<GRID_HEIGHT {
 			for col in 0..<GRID_WIDTH {
 				if let maybeObject = grid[row][col] { //if object at the grid point
 					if maybeObject.name == object.name { //if they are same object
 						foundObject = maybeObject //classes passed by reference, so they are the same item.
 						grid[row][col] = nil //remove the object here, because it is moving!
-						break
+						break objectFinder // breaks the full loop if object is found
 					}
 				}
-				if foundObject != nil {break} //if the object has been found, break
 			}
-			if foundObject != nil {break} //if object found, break
 		}
 
 		//make sure that there is an object found!
