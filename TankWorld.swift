@@ -36,6 +36,8 @@ class TankWorld {
 	//moves object to a Position
 	func moveObject(_ object:GameObject, toPosition:Position) {
 		grid.moveObject(object, toRow:toPosition.row, toCol:toPosition.col)
+
+		//will need to check for prexisting object and act accordingly - meppydc
 	}
 
 	//exactly what it sounds like
