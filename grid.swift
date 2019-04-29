@@ -153,6 +153,8 @@ class Grid {
 								tempLine += (" "*HORIZONTAL_SPACING)
 						}
 					} else if (line == 2) && coordsInEveryBox {//checks if position is displayed and display all coords is true
+						let coords = "(\(row),\(col))" // pulls from the for loops
+						tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
 					} else { //defaults to blank space
 						tempLine += (" "*HORIZONTAL_SPACING) // add blank space of right length
 					}
