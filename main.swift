@@ -20,4 +20,3 @@ tankLand.displayGrid() //now display the correct one!
 
 print("\n")
 print("End of program")
-//hi
