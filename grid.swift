@@ -162,7 +162,7 @@ class Grid {
 							tempLine += (" "*HORIZONTAL_SPACING)
 					}
 				
-					if col == GRID_HEIGHT - 1 {
+					if col == GRID_WIDTH - 1 {
 						tempLine += (RIGHT_EDGE) //this is the end of a line, so we need to put a final character
 					}
 				}
