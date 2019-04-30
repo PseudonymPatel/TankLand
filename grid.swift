@@ -130,19 +130,9 @@ class Grid {
 
 				//iterates through each element in the row, creating the second line in the row
 				for col in 0..<GRID_WIDTH {
-
-<<<<<<< HEAD
-					if col == 0 { //always start the line with a character, if first line, use the edge character.
-						tempLine += LEFT_EDGE
-					} else {
-						tempLine += VERTICAL_POLE
-					}
-
-=======
 					//always start the line with a character, if first line, use the edge character.
-					tempLine += (col == 0) ? LEFT_EDGE : VERTICAL_POLE 
-					
->>>>>>> 83f31dd2871f479480cfed07b38af35887d1ec88
+					tempLine += (col == 0) ? LEFT_EDGE : VERTICAL_POLE
+
 					if let object = grid[row][col] {//checks if their is an object
 						//The switch statement decides which information to store on the line.
 						// 0th line - shows health

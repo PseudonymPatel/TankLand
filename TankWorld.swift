@@ -18,13 +18,13 @@ class TankWorld {
 	var grid:[[GameObject?]]
 
 	//governs what turn the game is currently on
-	var turn:Int
+	var turn:Int?
 
 	//is the game over? Also, should this var be here? It is not in the specs.
 	var gameOver:Bool = false
 
 	//another one of those vars IDK if I should make. It is referenced in the code, but I see no declaration.
-	var lastLivingTank!
+	var lastLivingTank:Int?//change to Tank type once implemented!
 
 
 	// -------------------------------------
@@ -32,6 +32,7 @@ class TankWorld {
 	// -------------------------------------
 	init() {
 		self.grid = Array(repeating: Array(repeating: nil, count: GRID_WIDTH), count: GRID_HEIGHT) //create a grid
+		self.turn = 0
 	}
 
 
@@ -40,7 +41,7 @@ class TankWorld {
 	// -------------------------------------
 
 	//sets the winner of the game
-	func setWinner(lastTankStanding:Tank) {
+	func setWinner(lastTankStanding:Int) {//change to Tank type once implemented
 		gameOver = true
 		lastLivingTank = lastTankStanding
 	}
@@ -88,6 +89,6 @@ class TankWorld {
 
 	//exactly what it sounds like
 	func displayGrid() {
-		Grid(grid).displayGrid()
+		Grid(grid:grid).displayGrid()
 	}
 }
