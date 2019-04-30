@@ -131,19 +131,25 @@ class Grid {
 				//iterates through each element in the row, creating the second line in the row
 				for col in 0..<GRID_WIDTH {
 
+<<<<<<< HEAD
 					if col == 0 { //always start the line with a character, if first line, use the edge character.
 						tempLine += LEFT_EDGE
 					} else {
 						tempLine += VERTICAL_POLE
 					}
 
+=======
+					//always start the line with a character, if first line, use the edge character.
+					tempLine += (col == 0) ? LEFT_EDGE : VERTICAL_POLE 
+					
+>>>>>>> 83f31dd2871f479480cfed07b38af35887d1ec88
 					if let object = grid[row][col] {//checks if their is an object
 						//The switch statement decides which information to store on the line.
 						// 0th line - shows health
 						// 1st line - name
 						// 2nd line - coordinates
 						switch line {
-							case 0: //display the health
+							case 0: //display health
 									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
 
 							case 1://display name
@@ -184,8 +190,6 @@ class Grid {
 	//adds a new GameObject to the grid
 	//if row and col are not valid, it will fatal error.
 	//@param object the object to add
-	//@param row the row to add the object to
-	//@param col the column to add the object to
 	func addObject(_ object:GameObject) {
 		assert(object.position.row < GRID_HEIGHT, "Row is out of bounds for placing of GameObject: \(object)")
 		assert(object.position.col < GRID_WIDTH, "Column is out of bounds for placing of GameObject: \(object)")
