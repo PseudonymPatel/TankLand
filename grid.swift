@@ -10,8 +10,8 @@ class Grid {
 	// ---------------------------------------------------------
 	//Properties
 	// ---------------------------------------------------------
-	
-	//you may set this to true if you would like all the boxes to have a coordinate in it. 
+
+	//you may set this to true if you would like all the boxes to have a coordinate in it.
 	private let coordsInEveryBox:Bool = false
 
 	//Height and width of the grid - amount of elements per row/col
@@ -24,7 +24,7 @@ class Grid {
 
 	//all characters required to create the grid
 	//for a list of characters go to: https://jrgraphix.net/r/Unicode/2500-257F
-	private let TOP_LEFT_CORNER:String = "\u{2554}" 
+	private let TOP_LEFT_CORNER:String = "\u{2554}"
 	private let TOP_RIGHT_CORNER:String = "\u{2557}"
 	private let BOTTOM_LEFT_CORNER:String = "\u{255A}"
 	private let BOTTOM_RIGHT_CORNER:String = "\u{255D}"
@@ -54,6 +54,9 @@ class Grid {
 		grid = Array(repeating: Array(repeating: nil, count: GRID_WIDTH), count: GRID_HEIGHT)
 	}
 
+	init(grid:[[GameObject?]]) {
+		self.grid = grid
+	}
 	// ---------------------------------------------------------
 	// Accessor methods
 	// ---------------------------------------------------------
@@ -85,13 +88,13 @@ class Grid {
 	func drawLine(firstCharacter:String, line:String, intersection:String, lastCharacter:String) {
 		//print the firstCharacter
 		print(firstCharacter, terminator:"")
-		
+
 		//print the middle section, consisting of:
 		//SPACING amount of characters, then a intersection
 		for _ in 0..<GRID_WIDTH - 1 {
 			print(line*HORIZONTAL_SPACING + intersection, terminator:"")
 		}
-		
+
 		//for the last one, add a lastCharacter onto the end
 		print(line*HORIZONTAL_SPACING + lastCharacter)
 	}
@@ -109,40 +112,36 @@ class Grid {
 			} else { //draw the normal, center row
 				drawLine(firstCharacter:LEFT_EDGE_INTERSECTION, line:HORIZONTAL_POLE, intersection:CENTER_INTERSECTION, lastCharacter:RIGHT_EDGE_INTERSECTION)
 			}
-			
+
 			//this will contain each line, and will have VERTICAL_SPACING elements.
 			var tempLines = [String]()
 			//this is a temporary line, and will become an element in tempLines at the end of iteration
 			var tempLine = ""
-			
+
 			//iterates through each of the lines in the row, storing each one in tempLines, to display after all are generated.
 			for line in 0..<VERTICAL_SPACING {
 				//depending on the line, we will show a different statistic:
 				//0th line - health/energy
 				//1st line - Name
 				//2nd Line - ??
-				
+
 				//clears tempLine, to start a new line of information. At the end of this loop, it will be stored into tempLines
 				tempLine = ""
 
 				//iterates through each element in the row, creating the second line in the row
 				for col in 0..<GRID_WIDTH {
+					//always start the line with a character, if first line, use the edge character.
+					tempLine += (col == 0) ? LEFT_EDGE : VERTICAL_POLE
 
-					if col == 0 { //always start the line with a character, if first line, use the edge character.
-						tempLine += LEFT_EDGE
-					} else {
-						tempLine += VERTICAL_POLE
-					}
-					
 					if let object = grid[row][col] {//checks if their is an object
 						//The switch statement decides which information to store on the line.
 						// 0th line - shows health
 						// 1st line - name
 						// 2nd line - coordinates
 						switch line {
-							case 0: //display the health
+							case 0: //display health
 									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
-									
+
 							case 1://display name
 									tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - 	object.name.count)) //the name plus how ever many extra spaces are needed.
 
@@ -158,7 +157,7 @@ class Grid {
 					} else { //defaults to blank space
 						tempLine += (" "*HORIZONTAL_SPACING) // add blank space of right length
 					}
-				
+
 					if col == GRID_WIDTH - 1 {
 						tempLine += (RIGHT_EDGE) //this is the end of a line, so we need to put a final character
 					}
@@ -167,12 +166,12 @@ class Grid {
 				//add the tempLine to the end of the array of tempLines.
 				tempLines.append(tempLine)
 			}
-		
+
 		//draw the VERTICAL_SPACING number lines that were just generated
 		for i in tempLines {
 			print(i) //because no line break is added to the end of the line, it is put in here using the print statement
 		}
-		
+
 		}
 	//finally, draw the bottom row stuff
 	drawLine(firstCharacter:BOTTOM_LEFT_CORNER, line:BOTTOM_EDGE, intersection:BOTTOM_EDGE_INTERSECTION, lastCharacter:BOTTOM_RIGHT_CORNER)
@@ -181,8 +180,6 @@ class Grid {
 	//adds a new GameObject to the grid
 	//if row and col are not valid, it will fatal error.
 	//@param object the object to add
-	//@param row the row to add the object to
-	//@param col the column to add the object to
 	func addObject(_ object:GameObject) {
 		assert(object.position.row < GRID_HEIGHT, "Row is out of bounds for placing of GameObject: \(object)")
 		assert(object.position.col < GRID_WIDTH, "Column is out of bounds for placing of GameObject: \(object)")
@@ -219,7 +216,7 @@ class Grid {
 
 //This function makes it easier to repeat strings.
 //@param left the string to repeat
-//@param right the number of times to repeat the string 
+//@param right the number of times to repeat the string
 func *(left:String, right:Int) -> String {
 	return String(repeating:left, count:right)
 }
