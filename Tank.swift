@@ -34,8 +34,8 @@ class Tank:GameObject {
 	// ------------------------------------
 
 	init(row:Int, col:Int, name:String, energy:Int, id:String, instructions:String) {
-		self.initialInstructions = initialInstructions
-		super.init(row:row, col:col, objectType:.Tank, name:name, energy, energy, id:id)
+		self.initialInstructions = instructions
+		super.init(row:row, col:col, objectType:.Tank, name:name, energy:energy, id:id)
 	}
 
 
@@ -46,7 +46,7 @@ class Tank:GameObject {
 	//clears all the actions, only TANKWORLD calls this!!
 	final func clearActions() {
 		preActions = [Actions:PreAction]()
-		postAction = [Actions:PostAction]()
+		postActions = [Actions:PostAction]()
 	}
 
 	//recieves a message from the MessageCenter
