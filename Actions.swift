@@ -10,7 +10,7 @@ enum Actions {
 	case RadarAction //Tank sends out radar
 	case ShieldAction //Tank creates shield
 	case SendMessageAction //Tank sends message
-	case RecieveMessageAction //Tank recives action
+	case ReceiveMessageAction //Tank receives action
 	case MineAction //Tank creates mine
 	case RoverAction //Tank creates Rover
 	case MissleAction //Tank sends a missile
