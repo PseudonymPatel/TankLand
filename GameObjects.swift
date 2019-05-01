@@ -1,73 +1,66 @@
 /*
-*	This file will house all the GameObjects:
-*	Tanks
-*	Mines
-*	Rovers
-*	*Position Struct*
+*	This file will house the GameObject class and :
+*	GameObjectType
+*	
 *
 */
+
+//this is a list of all the types of GameObject
+enum GameObjectType {
+	case Tank
+	case Mine //we will do Mine and Rover separately
+	case Rover
+}
 
 //The class GameObject should be a superclass to all the possible objects on the TankLand grid
 //Will house basic funcion declarations for polymorphism.
 class GameObject:CustomStringConvertible {
-	
+
 	// ---------------------------------------------------------
 	// Properties
 	// ---------------------------------------------------------
 
+	//what type is this class?
+	let objectType:GameObjectType
 	//Health/Energy of the GameObject
-	var energy:Int
+	private (set) var energy:Int
 	//name that will be shown on grid
 	let name:String
-	//to keep track of the position of the GameObject
-	var position:Position
+	//required - so tanks do not interfere
+	let id:String
+	//the GO needs to know it's pos so it can do logic
+	private (set) var position:Position
 
 	var description:String {
-		return "\(self.name) at position \(position)"
+		return "\(self.objectType) \(self.name) \(self.energy) \(self.id) \(self.position)"
 	}
 
 	// ---------------------------------------------------------
 	// Initalizers
 	// ---------------------------------------------------------
-	init(name:String, energy:Int, position:Position) {
+	init(row:Int, col:Int, objectType:GameObjectType, name:String, energy:Int, id:String) {
 		self.energy = energy
 		self.name = name
-		self.position = position
-	}
-
-	init(name:String, position:Position) {
-		self.energy = 10000
-		self.name = name
-		self.position = position
+		self.position = [row, col]
+		self.id = id
+		self.objectType = objectType
 	}
 
 	// ---------------------------------------------------------
 	// Methods
 	// ---------------------------------------------------------
-	func hurt(_ energy:Int) {
-		self.energy -= energy
-	}
-}
+	//uses final for the functions that cannot be changed later
 
-struct Position:ExpressibleByArrayLiteral, CustomStringConvertible {
-
-	//Properties
-	var row:Int
-	var col:Int
-
-	var description:String {
-		return "(\(self.row), \(self.col))"
+	final func addEnergy(amount:Int) {
+		energy += amount
 	}
 
-	//Initalizers
-	init(row:Int, col:Int) {
-		self.row = row
-		self.col = col
+	final func useEnergy(amount:Int) {
+		energy = (amount > energy) ? 0 : energy-amount
 	}
 
-	init(arrayLiteral: Int...) { //convinient init so i can do: Position(1, 3) or let pos:Position = [1, 3]
-		assert(arrayLiteral.count == 2, "Must initialize Position with 2 values only!")
-		self.row = arrayLiteral[0]
-		self.col = arrayLiteral[1]
-  	}
+	final func setPosition(newPosition:Position) {
+		position = newPosition
+	}
+
 }
