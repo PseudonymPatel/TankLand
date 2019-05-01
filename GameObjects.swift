@@ -1,8 +1,7 @@
 /*
 *	This file will house the GameObject class and :
 *	GameObjectType
-*	*Position Struct*
-*	GameObject
+*	
 */
 
 //this is a list of all the types of GameObject
@@ -49,7 +48,7 @@ class GameObject:CustomStringConvertible {
 	// ---------------------------------------------------------
 	// Methods
 	// ---------------------------------------------------------
-	//uses final for the functions that cannot be changed later
+	//uses final for the functions that cannot be overwritten later
 
 	final func addEnergy(amount:Int) {
 		energy += amount
