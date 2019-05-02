@@ -27,8 +27,10 @@ class TankWorld {
 	var lastLivingTank:Tank?
 
 	//the logger
-	let logger:Logger
+	var logger:Logger
 
+	//amount of tank left on grid
+	var numberLivingTanks:Int = 0
 	// -------------------------------------
 	// Initializer
 	// -------------------------------------
@@ -61,9 +63,9 @@ class TankWorld {
 		assert(object.position.row < GRID_HEIGHT, "Row is out of bounds for placing of GameObject: \(object)")
 		assert(object.position.col < GRID_WIDTH, "Column is out of bounds for placing of GameObject: \(object)")
 		assert(grid[object.position.row][object.position.col] == nil, "There is already an object: \(String(describing:grid[object.position.row][object.position.col]))")
-		logger.addMajorLog(gameObject, "Added to tankland")
+		logger.addMajorLog(object, "Added to tankland")
 		grid[object.position.row][object.position.col] = object
-		if gameObject.objectType == .Tank {
+		if object.objectType == .Tank {
 			numberLivingTanks += 1
 		}
 	}
@@ -77,7 +79,7 @@ class TankWorld {
 		objectFinder: for row in 0..<GRID_HEIGHT {
 			for col in 0..<GRID_WIDTH {
 				if let maybeObject = grid[row][col] { //if object at the grid point
-					if maybeObject.name == object.name { //if they are same object
+					if maybeObject.id == object.id { //if they are same object
 						foundObject = maybeObject //classes passed by reference, so they are the same item.
 						grid[row][col] = nil //remove the object here, because it is moving!
 						break objectFinder // breaks the full loop if object is found
@@ -104,6 +106,6 @@ class TankWorld {
 		guard let radarAction = tank.preActions[.RadarAction] else {
 			return
 		}
-		actionRunRadar(tank:Tank, radarAction:radarAction as! RadarAction)
+		//actionRunRadar(tank:Tank, radarAction:radarAction as! RadarAction)
 	}
 }

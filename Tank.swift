@@ -33,9 +33,9 @@ class Tank:GameObject {
 	// Initializer
 	// ------------------------------------
 
-	init(row:Int, col:Int, name:String, energy:Int, id:String, instructions:String) {
+	init(row:Int, col:Int, energy:Int, id:String, instructions:String) {
 		self.initialInstructions = instructions
-		super.init(row:row, col:col, objectType:.Tank, name:name, energy:energy, id:id)
+		super.init(row:row, col:col, objectType:.Tank, energy:energy, id:id)
 	}
 
 

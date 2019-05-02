@@ -24,23 +24,20 @@ class GameObject:CustomStringConvertible {
 	let objectType:GameObjectType
 	//Health/Energy of the GameObject
 	private (set) var energy:Int
-	//name that will be shown on grid
-	let name:String
 	//required - so tanks do not interfere
 	let id:String
 	//the GO needs to know it's pos so it can do logic
 	private (set) var position:Position
 
 	var description:String {
-		return "\(self.objectType) \(self.name) \(self.energy) \(self.id) \(self.position)"
+		return "\(self.objectType) \(self.energy) \(self.id) \(self.position)"
 	}
 
 	// ---------------------------------------------------------
 	// Initalizers
 	// ---------------------------------------------------------
-	init(row:Int, col:Int, objectType:GameObjectType, name:String, energy:Int, id:String) {
+	init(row:Int, col:Int, objectType:GameObjectType, energy:Int, id:String) {
 		self.energy = energy
-		self.name = name
 		self.position = [row, col]
 		self.id = id
 		self.objectType = objectType

@@ -143,7 +143,7 @@ class Grid {
 									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
 
 							case 1://display name
-									tempLine += (" " + object.name + " "*((HORIZONTAL_SPACING - 1) - 	object.name.count)) //the name plus how ever many extra spaces are needed.
+									tempLine += (" " + object.id + " "*((HORIZONTAL_SPACING - 1) - 	object.id.count)) //the name plus how ever many extra spaces are needed.
 
 							case 2: //display the position on the grid
 									let coords = "(\(row),\(col))" // pulls from the for loops
@@ -197,7 +197,7 @@ class Grid {
 		objectFinder: for row in 0..<GRID_HEIGHT {
 			for col in 0..<GRID_WIDTH {
 				if let maybeObject = grid[row][col] { //if object at the grid point
-					if maybeObject.name == object.name { //if they are same object
+					if maybeObject.id == object.id { //if they are same object
 						foundObject = maybeObject //classes passed by reference, so they are the same item.
 						grid[row][col] = nil //remove the object here, because it is moving!
 						break objectFinder // breaks the full loop if object is found

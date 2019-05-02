@@ -24,13 +24,16 @@ class Mine:GameObject {
 	// ----------------------------------
 
 	//for both, the rover is optional param.
-	init(isRover:Bool, energy:Int, roverMovementType:String?, roverMovementDirection:Direction?) {
+	init(row:Int, col:Int, objectType:GameObjectType, energy:Int, id:String, isRover:Bool, roverMovementType:String?, roverMovementDirection:Direction?) {
+		self.isRover = isRover
 		if isRover {
 			self.roverMovementType = roverMovementType
 			self.roverMovementDirection = roverMovementDirection
+		} else {
+			self.roverMovementType = nil
+			self.roverMovementDirection = nil
 		}
-		self.energy = energy
-		self.isRover = isRover
+		super.init(row:row, col:col, objectType:objectType, energy:energy, id:id)
 	}
 
 	// -----------------------------------
