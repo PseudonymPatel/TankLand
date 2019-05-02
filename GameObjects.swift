@@ -1,7 +1,8 @@
 /*
 *	This file will house the GameObject class and :
 *	GameObjectType
-*	
+*	GameObject
+*
 */
 
 //this is a list of all the types of GameObject
