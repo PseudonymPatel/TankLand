@@ -3,7 +3,7 @@
 *	Included here is the code for message storage and all classes and helper functions related.
 *
 *	** MessageCenter Struct **
-*	
+*
 */
 struct MessageCenter {
 
@@ -11,7 +11,7 @@ struct MessageCenter {
 	// Properties
 	// ---------------------------------------------------------
 
-	//contains all the messages 
+	//contains all the messages
 	private var messages:[String:String]
 
 
@@ -20,7 +20,7 @@ struct MessageCenter {
 	// ---------------------------------------------------------
 
 	init() {
-		messages = [:]
+		messages = [String:String]()
 	}
 
 	// ---------------------------------------------------------

@@ -11,7 +11,7 @@ struct Logger {
 	// ------------------------
 
 	//keeps track of all actions and
-	var log: String
+	var log:String
 
 	init() {
 		self.log = ""
@@ -25,14 +25,14 @@ struct Logger {
 	//the game object is the subject
 	//@param gameobject the game object subject
 	//@param restOfLog the String after the subject
-	mutating func addlog( gameobject: GameObjects, restOfLog: String) {
-		self.log += gameobject.id + " " + restOfLog + "\n"
+	mutating func addlog(gameObject: GameObject, restOfLog: String) {
+		self.log += gameObject.id + " " + restOfLog + "\n"
 	}
 
 
 	//Difference between addLog and addMajorLog not known yet
 
-	mutating func addMajorLog(gameobject: GameObjects, restOfLog: String) {
-		self.log += gameobject.id + " " + restOfLog + "\n" 
+	mutating func addMajorLog(gameObject: GameObject, restOfLog: String) {
+		self.log += gameObject.id + " " + restOfLog + "\n"
 	}
 }

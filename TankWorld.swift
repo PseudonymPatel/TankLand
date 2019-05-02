@@ -24,8 +24,10 @@ class TankWorld {
 	var gameOver:Bool = false
 
 	//another one of those vars IDK if I should make. It is referenced in the code, but I see no declaration.
-	var lastLivingTank:Int?//change to Tank type once implemented!
+	var lastLivingTank:Tank?
 
+	//the logger
+	let logger:Logger
 
 	// -------------------------------------
 	// Initializer
@@ -33,6 +35,7 @@ class TankWorld {
 	init() {
 		self.grid = Array(repeating: Array(repeating: nil, count: GRID_WIDTH), count: GRID_HEIGHT) //create a grid
 		self.turn = 0
+		self.logger = Logger()
 	}
 
 
@@ -41,7 +44,7 @@ class TankWorld {
 	// -------------------------------------
 
 	//sets the winner of the game
-	func setWinner(lastTankStanding:Int) {//change to Tank type once implemented
+	func setWinner(lastTankStanding:Tank) {
 		gameOver = true
 		lastLivingTank = lastTankStanding
 	}
@@ -58,7 +61,11 @@ class TankWorld {
 		assert(object.position.row < GRID_HEIGHT, "Row is out of bounds for placing of GameObject: \(object)")
 		assert(object.position.col < GRID_WIDTH, "Column is out of bounds for placing of GameObject: \(object)")
 		assert(grid[object.position.row][object.position.col] == nil, "There is already an object: \(String(describing:grid[object.position.row][object.position.col]))")
+		logger.addMajorLog(gameObject, "Added to tankland")
 		grid[object.position.row][object.position.col] = object
+		if gameObject.objectType == .Tank {
+			numberLivingTanks += 1
+		}
 	}
 
 	//moves object to a Position
@@ -90,5 +97,13 @@ class TankWorld {
 	//exactly what it sounds like
 	func displayGrid() {
 		Grid(grid:grid).displayGrid()
+	}
+
+	//a helper method for radarAction, one per action
+	func handleRadar(tank:Tank) {
+		guard let radarAction = tank.preActions[.RadarAction] else {
+			return
+		}
+		actionRunRadar(tank:Tank, radarAction:radarAction as! RadarAction)
 	}
 }

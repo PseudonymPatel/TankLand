@@ -13,7 +13,7 @@ class Tank:GameObject {
 	//amount shields
 	var shields:Int = 0
 
-	//will store the results of a radar scan
+	//will store the results of a radar scar
 	var radarResults:[RadarResult]?
 
 	//a recieved message stored here
