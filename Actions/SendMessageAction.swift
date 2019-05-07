@@ -10,6 +10,6 @@ class SendMessageAction: PostAction {
 	}
 
 	var description: String {
-		return \(action) \(id) \(direction)
+		return "\(action) \(id) \(direction)"
 	}
 }
