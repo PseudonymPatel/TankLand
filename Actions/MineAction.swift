@@ -4,7 +4,7 @@ struct MineAction:PostAction {
 	let action:Actions
 	let direction:Direction
 	let energy:Int
-	let description:String {
+	var description:String {
 		return "\(action) \(direction) \(energy)"
 	}
 
