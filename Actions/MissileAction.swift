@@ -6,7 +6,7 @@
 struct MissileAction:PostAction {
 	let action:Actios
 	let target:Position
-	let description:String {
+	var description:String {
 		return "\(action) \(target)"
 	}
 
