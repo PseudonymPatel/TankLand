@@ -1,6 +1,6 @@
 /*
 *
-*	Only for the movment action
+*	Only for the movement action
 *
 */
 
@@ -13,7 +13,7 @@ struct MoveAction:PostAction {
 	}
 
 	init(distance:Int, direction:Direction) {
-		action = .MoveAction
+		self.action = .MoveAction
 		self.distance = distance
 		self.direction = direction
 	}
