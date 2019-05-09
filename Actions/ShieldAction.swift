@@ -2,12 +2,12 @@
 
 struct ShieldAction:PreAction {
 	let action:Actions
-	let energy:Int
+	let power:Int
 	var description:String {
-		return "\(action) \(energy)"
+		return "\(action) \(power)"
 	}
-	init(energy:Int) {
-		self.action = .ShieldAction
-		self.energy = energy
+	init(power:Int) {
+		self.action = .Shields
+		self.power = power
 	}
 }
