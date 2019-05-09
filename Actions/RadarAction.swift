@@ -2,13 +2,13 @@
 
 struct RadarAction:PreAction {
 	let action:Actions
-	let radius:Int
+	let range:Int
 	var description:String {
-		return "\(action) \(radius)"
+		return "\(action) \(range)"
 	}
 
-	init(radius:Int) {
-		self.radius = radius
-		self.action = .RadarAction
+	init(range:Int) {
+		self.range = range
+		self.action = .Radar
 	}
 }
