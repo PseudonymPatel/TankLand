@@ -1,16 +1,20 @@
 //mineAction
 
-struct MineAction:PostAction {
+struct DropMineAction:PostAction {
 	let action:Actions
-	let direction:Direction
+	let isRover:Bool
+	let moveDirection:Direction?
+	let dropDirection:Direction?
 	let energy:Int
 	var description:String {
-		return "\(action) \(direction) \(energy)"
+		return "\(action) \(energy) \(String(describing:dropDirection)) \(isRover) \(String(describing:moveDirection))"
 	}
 
-	init(direction:Direction, energy:Int) {
-		self.direction = direction
-		self.energy = energy
-		self.action = .MineAction
+	init(power:Int, isRover:Bool = false, dropDirection:Direction? = nil, moveDirection:Direction? = nil) {
+		self.action = .DropMine
+		self.isRover = isRover
+		self.dropDirection = dropDirection
+		self.moveDirection = moveDirection
+		self.energy = power
 	}
 }

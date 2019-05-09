@@ -6,14 +6,13 @@
 */
 
 enum Actions {
-	case MoveAction //the GO moves
-	case RadarAction //Tank sends out radar
-	case ShieldAction //Tank creates shield
-	case SendMessageAction //Tank sends message
-	case ReceiveMessageAction //Tank receives action
-	case MineAction //Tank creates mine
-	case RoverAction //Tank creates Rover
-	case MissileAction //Tank sends a missile
+	case Move //the GO moves
+	case Radar //Tank sends out radar
+	case Shields //Tank creates shield
+	case SendMessage //Tank sends message
+	case ReceiveMessage //Tank receives action
+	case DropMine //Tank creates mine
+	case Missile //Tank sends a missile
 
 }
 
