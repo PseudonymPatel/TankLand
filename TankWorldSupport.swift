@@ -58,12 +58,19 @@ extension TankWorld {
 
 	//return an array of all GO's
 	func findAllGameObjects() -> [GameObject] {
-
+		return grid.joined().compactMap {$0}
 	}
 
 	//find all tanks
 	func findAllTanks() -> [Tank] {
-
+		let GOs = grid.joined().compactMap {$0}
+		let tanks = [Tank]()
+		for i in GOs {
+			if i.objectType == .Tank {
+				tanks.append(i)
+			}
+		}
+		return tanks
 	}
 
 	//find all ROVERS
