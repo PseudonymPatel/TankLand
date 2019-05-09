@@ -13,7 +13,7 @@ struct MoveAction:PostAction {
 	}
 
 	init(distance:Int, direction:Direction) {
-		self.action = .MoveAction
+		self.action = .Move
 		self.distance = distance
 		self.direction = direction
 	}
