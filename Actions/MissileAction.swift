@@ -5,13 +5,15 @@
 
 struct MissileAction:PostAction {
 	let action:Actions
+	let power:Int
 	let target:Position
 	var description:String {
-		return "\(action) \(target)"
+		return "\(action) \(power) \(target)"
 	}
 
-	init(target:Position) {
+	init(power:Int, target:Position) {
+		self.power = power
 		self.target = target
-		self.action = .MissileAction
+		self.action = .Missile
 	}
 }
