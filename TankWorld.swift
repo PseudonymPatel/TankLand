@@ -103,7 +103,7 @@ class TankWorld {
 
 	//a helper method for radarAction, one per action
 	func handleRadar(tank:Tank) {
-		guard let radarAction = tank.preActions[.RadarAction] else {
+		guard let radarAction = tank.preActions[.Radar] else {
 			return
 		}
 		//actionRunRadar(tank:Tank, radarAction:radarAction as! RadarAction)

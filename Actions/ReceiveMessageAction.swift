@@ -8,7 +8,7 @@ struct ReceiveMessageAction:PreAction {
 	}
 
 	init(id:String) {
-		self.action = .ReceiveMessageAction
+		self.action = .ReceiveMessage
 		self.id = id
 	}
 }
