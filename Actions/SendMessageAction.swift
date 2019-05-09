@@ -1,5 +1,7 @@
 //SendMessageAction Class
 
+//using id
+
 struct SendMessageAction: PostAction {
 	let action: Actions
 	let id: String
