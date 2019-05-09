@@ -11,7 +11,7 @@ struct SendMessageAction: PostAction {
 	}
 
 	init(id: String, message: String) {
-		self.action = .SendMessageAction
+		self.action = .SendMessage
 		self.id = id
 		self.message = message
 	}
