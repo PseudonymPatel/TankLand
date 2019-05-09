@@ -13,7 +13,7 @@ enum Actions {
 	case ReceiveMessageAction //Tank receives action
 	case MineAction //Tank creates mine
 	case RoverAction //Tank creates Rover
-	case MissleAction //Tank sends a missile
+	case MissileAction //Tank sends a missile
 
 }
 

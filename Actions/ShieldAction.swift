@@ -1,7 +1,7 @@
 //SheildAction
 
 struct ShieldAction:PreAction {
-	let action:Action
+	let action:Actions
 	let energy:Int
 	var description:String {
 		return "\(action) \(energy)"

@@ -3,7 +3,7 @@
 struct ReceiveMessageAction:PreAction {
 	let action:Actions
 	let id:String
-	let description:String {
+	var description:String {
 		return "\(action) \(id)"
 	}
 

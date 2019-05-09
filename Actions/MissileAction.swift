@@ -4,7 +4,7 @@
 */
 
 struct MissileAction:PostAction {
-	let action:Actios
+	let action:Actions
 	let target:Position
 	var description:String {
 		return "\(action) \(target)"
@@ -12,5 +12,6 @@ struct MissileAction:PostAction {
 
 	init(target:Position) {
 		self.target = target
+		self.action = .MissileAction
 	}
 }

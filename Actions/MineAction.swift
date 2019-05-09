@@ -11,5 +11,6 @@ struct MineAction:PostAction {
 	init(direction:Direction, energy:Int) {
 		self.direction = direction
 		self.energy = energy
+		self.action = .MineAction
 	}
 }

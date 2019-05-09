@@ -1,15 +1,16 @@
 //SendMessageAction Class
 
-class SendMessageAction: PostAction {
+struct SendMessageAction: PostAction {
 	let action: Actions
 	let id: String
 	let message: String
+	var description:String {
+		return "\(action) \(id) \(message)"
+	}
 
 	init(id: String, message: String) {
 		self.action = .SendMessageAction
-	}
-
-	var description: String {
-		return "\(action) \(id) \(direction)"
+		self.id = id
+		self.message = message
 	}
 }

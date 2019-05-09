@@ -9,5 +9,6 @@ struct RadarAction:PreAction {
 
 	init(radius:Int) {
 		self.radius = radius
+		self.action = .RadarAction
 	}
 }
