@@ -1,5 +1,11 @@
 // For all the support functions to make life easier.
 
+//we gotta
+
+import Foundation
+
+//xd
+
 extension TankWorld {
 
 	//given position, direction, mag, return new position -> vector math :(
@@ -63,11 +69,11 @@ extension TankWorld {
 
 	//find all tanks
 	func findAllTanks() -> [Tank] {
-		let GOs = grid.joined().compactMap {$0}
-		let tanks = [Tank]()
+		let GOs = findAllGameObjects()
+		var tanks = [Tank]()
 		for i in GOs {
 			if i.objectType == .Tank {
-				tanks.append(i)
+				tanks.append(i as! Tank)
 			}
 		}
 		return tanks
@@ -75,7 +81,14 @@ extension TankWorld {
 
 	//find all ROVERS
 	func findAllRovers() -> [Mine] {
-
+		let GOs = findAllGameObjects()
+		var rovers = [Mine]()
+		for i in GOs {
+			if i.objectType == .Rover {
+				rovers.append(i as! Mine)
+			}
+		}
+		return rovers
 	}
 
 	//return grid loc. ajacent which is empty
@@ -105,11 +118,18 @@ extension TankWorld {
 
 	//finds if winner
 	func findWinner() -> Tank? {
-
+		let GOs = findAllTanks()
+		if GOs.count == 1 {
+			return GOs[1]
+		} else {
+			return nil
+		}
 	}
 
 	//calc the distance between locations
 	func distance(_ p1:Position, _ p2:Position) -> Int {
-
+		let deltarow = p2.row - p1.row
+		let deltacol = p2.col - p1.col
+		return sqrt( deltarow * deltarow + deltacol * deltacol)
 	}
 }
