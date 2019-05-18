@@ -90,7 +90,62 @@ extension TankWorld {
 
 	//return all positions ajacent, within grid
 	func getLegalSurroundingPositions(_ position:Position) -> [Position] {
+        var c:Int = 0
+		var cellsToCheck = [(row-1,col-1), (row-1, col), (row-1, col+1), (row, col-1), (row, col+1), (row+1,col-1), (row+1, col), (row+1, col+1)]
 
+		/*
+
+		0 1 2 + + r
+		3 x 4 + +
+		5 6 7 + +
+		+ + + + +
+		+ + + + +
+		c
+		*/
+
+		//for edge cases (puns reeeeee)
+		if row == 0 { //for top row
+			cellsToCheck.remove(at: 0)
+			cellsToCheck.remove(at: 0) //the index change when remove
+			cellsToCheck.remove(at: 0)
+
+			if col == 0 { //top left corner
+				cellsToCheck.remove(at: 0)
+				cellsToCheck.remove(at: 1)
+			} else if col == array.cols { //top right corner
+				cellsToCheck.remove(at: 1)
+				cellsToCheck.remove(at: 3)
+			}
+		} else if row == array.rows { //bottom row
+			cellsToCheck.remove(at: 5)
+			cellsToCheck.remove(at: 5)
+			cellsToCheck.remove(at: 5)
+
+			if col == 0 { //bottom left corner
+				cellsToCheck.remove(at: 0)
+				cellsToCheck.remove(at: 2)
+			} else if col == array.cols { //bottom right corner
+				cellsToCheck.remove(at: 2)
+				cellsToCheck.remove(at: 3)
+			}
+		} else if col == 0 { //left col
+			cellsToCheck.remove(at: 0)
+			cellsToCheck.remove(at: 2)
+			cellsToCheck.remove(at: 3)
+		} else if col == array.cols { //right col
+			cellsToCheck.remove(at: 2)
+			cellsToCheck.remove(at: 3)
+			cellsToCheck.remove(at: 5)
+		}
+
+		//goes through the list of cellsToCheck to find surrounding cells
+        for check in cellsToCheck {
+            if array[check.0, check.1].state == CellState.alive || array[check.0, check.1].state == CellState.makeDead {
+                c += 1
+            }
+        }
+
+        return c
 	}
 
 	//return rand direction
