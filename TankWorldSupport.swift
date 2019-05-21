@@ -169,10 +169,6 @@ extension TankWorld {
 	func distance(_ p1:Position, _ p2:Position) -> Int {
 		let deltarow = p2.row - p1.row
 		let deltacol = p2.col - p1.col
-<<<<<<< HEAD
-		return Int(sqrt( Double(deltarow * deltarow + deltacol * deltacol)))
-=======
 		return Int(Double(deltarow * deltarow + deltacol * deltacol).squareRoot())
->>>>>>> 77951d95e6d94664537c3f3dbf1c3976f0587849
 	}
 }
