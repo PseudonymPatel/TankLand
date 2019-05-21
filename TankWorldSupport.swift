@@ -89,59 +89,25 @@ extension TankWorld {
 	func getLegalSurroundingPositions(_ position:Position) -> [Position] {
 		let row = position.row
 		let col = position.col
-		var cellsToCheck = [(row-1,col-1), (row-1, col), (row-1, col+1), (row, col-1), (row, col+1), (row+1,col-1), (row+1, col), (row+1, col+1)]
+		let left = position.col - 1
+		let right = position.col + 1
+		let up = position.row - 1
+		let down = position.row + 1
+		var positions = [Position]()
 
-		/*
+		positions.append(Position(up,left))
+		positions.append(Position(up,col))
+		positions.append(Position(up,right))
+		
+		positions.append(Position(row,left))
+		positions.append(Position(row,right))
 
-		0 1 2 + + r
-		3 x 4 + +
-		5 6 7 + +
-		+ + + + +
-		+ + + + +
-		c
-		*/
+		positions.append(Position(down,left))
+		positions.append(Position(down,col))
+		positions.append(Position(down,right))
 
-		//for edge cases (puns reeeeee)
-		if row == 0 { //for top row
-			cellsToCheck.remove(at: 0)
-			cellsToCheck.remove(at: 0) //the index change when remove
-			cellsToCheck.remove(at: 0)
+		return positions.filter{isValidPosition($0)}
 
-			if col == 0 { //top left corner
-				cellsToCheck.remove(at: 0)
-				cellsToCheck.remove(at: 1)
-			} else if col == 14 { //top right corner
-				cellsToCheck.remove(at: 1)
-				cellsToCheck.remove(at: 3)
-			}
-		} else if row == 14 { //bottom row
-			cellsToCheck.remove(at: 5)
-			cellsToCheck.remove(at: 5)
-			cellsToCheck.remove(at: 5)
-
-			if col == 0 { //bottom left corner
-				cellsToCheck.remove(at: 0)
-				cellsToCheck.remove(at: 2)
-			} else if col == 14 { //bottom right corner
-				cellsToCheck.remove(at: 2)
-				cellsToCheck.remove(at: 3)
-			}
-		} else if col == 0 { //left col
-			cellsToCheck.remove(at: 0)
-			cellsToCheck.remove(at: 2)
-			cellsToCheck.remove(at: 3)
-		} else if col == 14 { //right col
-			cellsToCheck.remove(at: 2)
-			cellsToCheck.remove(at: 3)
-			cellsToCheck.remove(at: 5)
-		}
-
-		//take the array of cells and convert to positions
-		var converted = [Position]()
-		for i in cellsToCheck {
-			converted.append([i.0, i.1])
-		}
-		return converted
 	}
 
 	//return rand direction
