@@ -1,11 +1,5 @@
 // For all the support functions to make life easier.
 
-//we gotta
-
-import Foundation
-
-//xd
-
 extension TankWorld {
 
 	//given position, direction, mag, return new position -> vector math :(
@@ -70,25 +64,15 @@ extension TankWorld {
 	//find all tanks
 	func findAllTanks() -> [Tank] {
 		let GOs = findAllGameObjects()
-		var tanks = [Tank]()
-		for i in GOs {
-			if i.objectType == .Tank {
-				tanks.append(i as! Tank)
-			}
-		}
-		return tanks
+		let tanks = GOs.filter{$0.objectType == .Tank}
+		return tanks as! [Tank]
 	}
 
 	//find all ROVERS
 	func findAllRovers() -> [Mine] {
 		let GOs = findAllGameObjects()
-		var rovers = [Mine]()
-		for i in GOs {
-			if i.objectType == .Rover {
-				rovers.append(i as! Mine)
-			}
-		}
-		return rovers
+		let rovers = GOs.filter{$0.objectType == .Rover}
+		return rovers as! [Mine]
 	}
 
 	//return grid loc. ajacent which is empty
@@ -98,7 +82,7 @@ extension TankWorld {
 
 	//return pos offset from x
 	func makeOffsetPosition(position:Position, offsetRow:Int, offsetCol:Int) -> Position? {
-		return nil
+		return Position(row:offsetRow - position.row, col: offsetCol - position.col)
 	}
 
 	//return all positions ajacent, within grid
@@ -185,6 +169,10 @@ extension TankWorld {
 	func distance(_ p1:Position, _ p2:Position) -> Int {
 		let deltarow = p2.row - p1.row
 		let deltacol = p2.col - p1.col
+<<<<<<< HEAD
 		return Int(sqrt( Double(deltarow * deltarow + deltacol * deltacol)))
+=======
+		return Int(Double(deltarow * deltarow + deltacol * deltacol).squareRoot())
+>>>>>>> 77951d95e6d94664537c3f3dbf1c3976f0587849
 	}
 }
