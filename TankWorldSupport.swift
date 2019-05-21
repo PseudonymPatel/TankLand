@@ -10,7 +10,7 @@ extension TankWorld {
 
 	//given position, direction, mag, return new position -> vector math :(
 	func newPosition(position:Position, direction:Direction, magnitude:Int) -> Position {
-
+		return [0,0]
 	}
 
 	//are row, col in the grid??
@@ -54,12 +54,12 @@ extension TankWorld {
 
 	//given array of GO, return array w/ same objects but randomized.
 	func randomizeGameObjects<T:GameObject>(gameObjects: [T]) -> [T] {
-
+		return []
 	}
 
 	//finds GO's within radius
 	func findGameObjectsWithinRange(_ position:Position, range:Int) -> [Position] {
-
+		return []
 	}
 
 	//return an array of all GO's
@@ -93,17 +93,18 @@ extension TankWorld {
 
 	//return grid loc. ajacent which is empty
 	func findFreeAjacent(_ position:Position) -> Position? {
-
+		return nil
 	}
 
 	//return pos offset from x
 	func makeOffsetPosition(position:Position, offsetRow:Int, offsetCol:Int) -> Position? {
-
+		return nil
 	}
 
 	//return all positions ajacent, within grid
 	func getLegalSurroundingPositions(_ position:Position) -> [Position] {
-        var c:Int = 0
+		let row = position.row
+		let col = position.col
 		var cellsToCheck = [(row-1,col-1), (row-1, col), (row-1, col+1), (row, col-1), (row, col+1), (row+1,col-1), (row+1, col), (row+1, col+1)]
 
 		/*
@@ -125,11 +126,11 @@ extension TankWorld {
 			if col == 0 { //top left corner
 				cellsToCheck.remove(at: 0)
 				cellsToCheck.remove(at: 1)
-			} else if col == array.cols { //top right corner
+			} else if col == 14 { //top right corner
 				cellsToCheck.remove(at: 1)
 				cellsToCheck.remove(at: 3)
 			}
-		} else if row == array.rows { //bottom row
+		} else if row == 14 { //bottom row
 			cellsToCheck.remove(at: 5)
 			cellsToCheck.remove(at: 5)
 			cellsToCheck.remove(at: 5)
@@ -137,7 +138,7 @@ extension TankWorld {
 			if col == 0 { //bottom left corner
 				cellsToCheck.remove(at: 0)
 				cellsToCheck.remove(at: 2)
-			} else if col == array.cols { //bottom right corner
+			} else if col == 14 { //bottom right corner
 				cellsToCheck.remove(at: 2)
 				cellsToCheck.remove(at: 3)
 			}
@@ -145,25 +146,24 @@ extension TankWorld {
 			cellsToCheck.remove(at: 0)
 			cellsToCheck.remove(at: 2)
 			cellsToCheck.remove(at: 3)
-		} else if col == array.cols { //right col
+		} else if col == 14 { //right col
 			cellsToCheck.remove(at: 2)
 			cellsToCheck.remove(at: 3)
 			cellsToCheck.remove(at: 5)
 		}
 
-		//goes through the list of cellsToCheck to find surrounding cells
-        for check in cellsToCheck {
-            if array[check.0, check.1].state == CellState.alive || array[check.0, check.1].state == CellState.makeDead {
-                c += 1
-            }
-        }
-
-        return c
+		//take the array of cells and convert to positions
+		var converted = [Position]()
+		for i in cellsToCheck {
+			converted.append([i.0, i.1])
+		}
+		return converted
 	}
 
 	//return rand direction
 	func getRandomDirection() -> Direction {
-
+		let random = Int.random(in: 0..<8)//get a random int between [0,8)
+		return Direction(rawValue: random)! //creates a random direction using the rawValue, called via auto-generated constructor (just ask sheen why)
 	}
 
 	//checks to see if a GO has enough energy
@@ -185,6 +185,6 @@ extension TankWorld {
 	func distance(_ p1:Position, _ p2:Position) -> Int {
 		let deltarow = p2.row - p1.row
 		let deltacol = p2.col - p1.col
-		return sqrt( deltarow * deltarow + deltacol * deltacol)
+		return Int(sqrt( Double(deltarow * deltarow + deltacol * deltacol)))
 	}
 }
