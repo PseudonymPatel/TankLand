@@ -10,9 +10,10 @@ struct Logger {
 	//	Properties
 	// ------------------------
 
+	//keeps track of all actions and
 	//the index of the log represents what turn number
 	var log: [String]
-
+	
 	//keeps track of which turn is happening
 	var turn: Int
 
@@ -41,13 +42,13 @@ struct Logger {
 	//the game object is the subject
 	//@param gameobject the game object subject
 	//@param restOfLog the String after the subject
-	mutating func addLog(_ gameobject: GameObject, _ restOfLog: String) {
+	mutating func addLog(_ gameobject: GameObject,_  restOfLog: String) {
 		self.log[self.turn] += "    " + gameobject.id + " " + restOfLog + "\n"
 	}
 
 
 	//same as addLog except the message is marked with ** to represent imporant
-	mutating func addMajorLog(_ gameobject: GameObject, _  restOfLog: String) {
-		self.log[self.turn] += "****" + gameobject.id + " " + restOfLog + "\n"
+	mutating func addMajorLog(_ gameobject: GameObject, _ restOfLog: String) {
+		self.log[self.turn] += "****" + gameobject.id + " " + restOfLog + "\n" 
 	}
 }
