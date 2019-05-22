@@ -135,6 +135,6 @@ class TankWorld {
 			//the idea with gameOver is that it will be set in doTurn(), so we need the loop to check. Otherwise we could do while(true)
 		} while !gameOver
 
-		print("** WINNER IS \(lastLivingTank!) **")
+		print("** WINNER IS \(lastLivingTank ?? 0) **")
 	}
 }
