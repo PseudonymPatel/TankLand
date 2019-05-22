@@ -95,17 +95,7 @@ extension TankWorld {
 		let down = position.row + 1
 		var positions = [Position]()
 
-		positions.append(Position(up,left))
-		positions.append(Position(up,col))
-		positions.append(Position(up,right))
-		
-		positions.append(Position(row,left))
-		positions.append(Position(row,right))
-
-		positions.append(Position(down,left))
-		positions.append(Position(down,col))
-		positions.append(Position(down,right))
-
+		positions += [[up,left], [up, col], [up, right], [row,left], [row, right], [down, left], [down, col], [down, right]]
 		return positions.filter{isValidPosition($0)}
 
 	}
