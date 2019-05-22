@@ -127,4 +127,9 @@ extension TankWorld {
 		let deltacol = p2.col - p1.col
 		return Int(Double(deltarow * deltarow + deltacol * deltacol).squareRoot())
 	}
+
+	//assumes that you've done error checking
+	func applyCost(_ tank:Tank, amount:Int) {
+		tank.useEnergy(amount:amount)
+	}
 }
