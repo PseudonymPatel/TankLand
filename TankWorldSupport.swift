@@ -1,10 +1,44 @@
 // For all the support functions to make life easier.
-
+import Foundation
 extension TankWorld {
 
 	//given position, direction, mag, return new position -> vector math :(
 	func newPosition(position:Position, direction:Direction, magnitude:Int) -> Position {
-		return [0,0]
+		let originRow = position.row
+		let originCol = position.col
+
+		let componentRow:Int!
+		let componentCol:Int!
+		//get the components of the vector
+		//MAKE MORE EFFECIENT/LESS CODE
+		switch direction { //depending on direction, do different math.
+			case .North:
+				componentRow = 0
+				componentCol = magnitude
+			case .South:
+				componentRow = 0
+				componentCol = -magnitude
+			case .East:
+				componentRow = magnitude
+				componentCol = 0
+			case .West:
+				componentRow = -magnitude
+				componentCol = 0
+			case .NorthWest:
+				componentRow = Int(sqrt(2)*Double(-magnitude))
+				componentCol = Int(sqrt(2)*Double(magnitude))
+			case .NorthEast:
+				componentRow = Int(sqrt(2)*Double(magnitude))
+				componentCol = Int(sqrt(2)*Double(magnitude))
+			case .SouthEast:
+				componentRow = Int(sqrt(2)*Double(magnitude))
+				componentCol = Int(sqrt(2)*Double(-magnitude))
+			case .SouthWest:
+				componentRow = Int(sqrt(2)*Double(-magnitude))
+				componentCol = Int(sqrt(2)*Double(-magnitude))
+		}
+
+		return [componentRow + originRow, originCol + componentCol]
 	}
 
 	//are row, col in the grid??
@@ -77,7 +111,15 @@ extension TankWorld {
 
 	//return grid loc. ajacent which is empty
 	func findFreeAjacent(_ position:Position) -> Position? {
-		return nil
+		var surroundingPos = getLegalSurroundingPositions(position)
+		surroundingPos = surroundingPos.filter {isPositionEmpty($0)}
+
+		if surroundingPos.count <= 0 {
+			return nil
+		}
+
+		let rand = Int.random(in: 0..<surroundingPos.count)
+		return surroundingPos[rand]
 	}
 
 	//return pos offset from x
