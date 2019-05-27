@@ -55,7 +55,7 @@ class Tank:GameObject {
 	}
 
 	//adds an action to the array of PreActions
-	final func addPreActions(preAction:PreAction) {
+	final func addPreAction(preAction:PreAction) {
 		preActions[preAction.action] = preAction
 	}
 
