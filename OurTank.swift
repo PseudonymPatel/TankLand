@@ -43,17 +43,20 @@ class OurTank:Tank {
 		addPostAction(postAction: MoveAction(distance:1, direction:getRandomDirection([.South, .SouthWest, .SouthEast])))
 
 		//choose a location: find the closest tank far enough so we won't take damage.
-		let result:RadarResult!
-		let results = radarResults!.sorted(by: { sorter($0, $1) })
-		for pos in results {
-			if distance(self.position, pos.position) >= 2 { //so we don't take damage
-				result = pos
-				break
-			}
-		}
+		let result:RadarResult?
 
-		if let theresult = result! { //if we found a good location...
-			addPostAction(postAction: MissileAction(power:200, target:theresult.position))
+		if let radarResults = radarResults {
+			let results = radarResults.sorted(by: { sorter($0, $1) })
+			for pos in results {
+				if distance(self.position, pos.position) >= 2 { //so we don't take damage
+					result = pos
+					break
+				}
+			}
+
+			if let theresult = result { //if we found a good location...
+				addPostAction(postAction: MissileAction(power:200, target:theresult.position))
+			}
 		}
 
 		if turnNum % 3 == 0 { //every three turns, send a rover north.
