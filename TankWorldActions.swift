@@ -93,9 +93,19 @@ extension TankWorld {
 			return
 		}
 
-		guard !isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveLength-1])
+		guard !isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveLength-1]) else {
+			logger.addLog(tank, "Insufficent nrg to move.")
+			return
+		}
 
-		//continue
+		guard grid[moveAction.postition.row][moveAction.position.col] == nil else {
+			logger.addLog(tank, "Object already at position.")
+			return
+		}
+
+		applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveLength-1])
+
+		moveObject(tank, toRow:moveAction.position.row, toCol:moveAction.position.col)
 	}
 
 	func actionShields(tank:Tank, shieldAction:ShieldAction) {

@@ -1,4 +1,4 @@
-#/main
-#*.swp
-#/main.swift
-#/compile
+/main
+*.swp
+/main.swift
+/compile
