@@ -18,7 +18,7 @@ extension TankWorld {
 			return
 		}
 
-		actionRunRadar(tank:tank, radarAction:radarAction as! RadarAction)
+		actionRadar(tank:tank, radarAction:radarAction as! RadarAction)
 	}
 
 	func handleMove(tank:Tank) {
@@ -109,15 +109,54 @@ extension TankWorld {
 	}
 
 	func actionShields(tank:Tank, shieldAction:ShieldAction) {
+		if isDead(tank) {
+			return
+		}
 
+		logger.addLog(tank, "adding shield \(shieldAction)")
+
+		if !isEnergyAvailable(tank, amount:shieldAction.energy) {
+			logger.addLog(tank, "Insufficient Energy to apply shield.")
+			return
+		}
+
+		applyCost(tank, amount:shieldAction.energy)
+
+		tank.shields = shieldAction.energy * Constants.shieldPowerMultiple
 	}
 
 	func actionMissile(tank:Tank, missileAction:MissileAction) {
+		if isDead(tank) {
+			return
+		}
 
+		logger.addLog(tank, "Sending Missile \(missileAction)")
+
+		if !isEnergyAvailable(tank, amount:missileAction.energy) {
+			logger.addLog(tank, "insuff. energy to send missile")
+			return
+		}
+
+		applyCost(tank, amount:missileAction.energy)
+
+		//do missile stuff
 	}
 
 	func actionRadar(tank:Tank, radarAction:RadarAction) {
+		if isDead(tank) {
+			return
+		}
 
+		logger.addLog(tank, "Doing Radar \(radarAction)")
+
+		if !isEnergyAvailable(tank, amount:Constants.costOfRadarByUnitsDistance[radarAction.range]) {
+			logger.addLog(tank, "insuff. energy to do radar")
+			return
+		}
+
+		applyCost(tank, amount:Constants.costOfRadarByUnitsDistance[radarAction.range])
+
+		//do radar stuff
 	}
 
 	func actionSendMessage(tank:Tank, sendMessageAction:SendMessageAction) {
@@ -138,7 +177,7 @@ extension TankWorld {
 		messageCenter.sendMessage(id:sendMessageAction.id, message:sendMessageAction.message)
 	}
 
-	func actionRecieveMessage(tank:Tank, receiveMessageAction:ReceiveMessageAction) {
+	func actionReceiveMessage(tank:Tank, receiveMessageAction:ReceiveMessageAction) {
 		//implementation provided on sheet
 		if isDead(tank) {
 			return
@@ -149,11 +188,25 @@ extension TankWorld {
 		if !isEnergyAvailable(tank, amount:Constants.costOfReceivingMessage) {
 			logger.addLog(tank, "Insufficient Enerfy to reciese feme emessage.")
 		}
-		//continue here
+
+		tank.receivedMessage = messageCenter.receiveMessage(id:receiveMessageAction.id)
 	}
 
 	func actionDropMine(tank:Tank, dropMineAction:DropMineAction) {
+		if isDead(tank) {
+			return
+		}
 
+		logger.addLog(tank, "Dropping Mine: \(dropMineAction)")
+
+		if !isEnergyAvailable(tank, amount:dropMineAction.energy) {
+			logger.addLog(tank, "insuff. energy to dropMineActiton")
+			return
+		}
+
+		applyCost(tank, amount:dropMineAction.power)
+
+		//create the thing
 	}
 
 	//typing all this shit on the chromebook gave me arthritis and I had to redo it because it was lost somehow (i'm fucking retarded)
