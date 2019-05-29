@@ -23,11 +23,11 @@ class GameObject:CustomStringConvertible {
 	//what type is this class?
 	let objectType:GameObjectType
 	//Health/Energy of the GameObject
-	private (set) var energy:Int
+	var energy:Int
 	//required - so tanks do not interfere
 	let id:String
 	//the GO needs to know it's pos so it can do logic
-	private (set) var position:Position
+	var position:Position
 
 	var description:String {
 		return "\(self.objectType) \(self.energy) \(self.id) \(self.position)"

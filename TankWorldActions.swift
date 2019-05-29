@@ -30,11 +30,11 @@ extension TankWorld {
 	}
 
 	func handleShields(tank:Tank) {
-		guard let shieldAction = tank.preActions[.Shield] else {
+		guard let shieldAction = tank.preActions[.Shields] else {
 			return
 		}
 
-		actionShield(tank:tank, shieldAction:shieldAction as! ShieldAction)
+		actionShields(tank:tank, shieldAction:shieldAction as! ShieldAction)
 
 	}
 
@@ -61,7 +61,7 @@ extension TankWorld {
 			return
 		}
 
-		actionReceiveMessageAction(tank:tank, receiveMessageAction:receiveMessageAction as! ReceiveMessageAction)
+		actionReceiveMessage(tank:tank, receiveMessageAction:receiveMessageAction as! ReceiveMessageAction)
 
 	}
 
@@ -71,7 +71,7 @@ extension TankWorld {
 			return
 		}
 
-		actionDropMine(tank:tank, Action:dropMineAction as! DropMineAction)
+		actionDropMine(tank:tank, dropMineAction:dropMineAction as! DropMineAction)
 	}
 
 
@@ -86,26 +86,26 @@ extension TankWorld {
 
 		logger.addLog(tank, "Moving tank \(moveAction)")
 
-		let moveLength:Int = distance(tank.position, moveAction.position)
-
-		guard moveLength <= 3, moveLength > 0 else {
+		guard moveAction.distance <= 3, moveAction.distance > 0 else {
 			logger.addLog(tank, "Tank cannot move so far.")
 			return
 		}
 
-		guard !isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveLength-1]) else {
+		guard !isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance-1]) else {
 			logger.addLog(tank, "Insufficent nrg to move.")
 			return
 		}
 
-		guard grid[moveAction.postition.row][moveAction.position.col] == nil else {
+		let position = newPosition(position:tank.position, direction:moveAction.direction, magnitude:moveAction.distance)
+
+		guard grid[position.row][position.col] == nil else {
 			logger.addLog(tank, "Object already at position.")
 			return
 		}
 
-		applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveLength-1])
+		applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance-1])
 
-		moveObject(tank, toRow:moveAction.position.row, toCol:moveAction.position.col)
+		moveObject(tank, toRow:position.row, toCol:position.col)
 	}
 
 	func actionShields(tank:Tank, shieldAction:ShieldAction) {
@@ -115,14 +115,14 @@ extension TankWorld {
 
 		logger.addLog(tank, "adding shield \(shieldAction)")
 
-		if !isEnergyAvailable(tank, amount:shieldAction.energy) {
+		if !isEnergyAvailable(tank, amount:shieldAction.power) {
 			logger.addLog(tank, "Insufficient Energy to apply shield.")
 			return
 		}
 
-		applyCost(tank, amount:shieldAction.energy)
+		applyCost(tank, amount:shieldAction.power)
 
-		tank.shields = shieldAction.energy * Constants.shieldPowerMultiple
+		tank.shields = shieldAction.power * Constants.shieldPowerMultiple
 	}
 
 	func actionMissile(tank:Tank, missileAction:MissileAction) {
@@ -132,14 +132,36 @@ extension TankWorld {
 
 		logger.addLog(tank, "Sending Missile \(missileAction)")
 
-		if !isEnergyAvailable(tank, amount:missileAction.energy) {
+		if !isEnergyAvailable(tank, amount:missileAction.power) {
 			logger.addLog(tank, "insuff. energy to send missile")
 			return
 		}
 
-		applyCost(tank, amount:missileAction.energy)
+		//make sure sending to real location:
+		guard isValidPosition(missileAction.target) else {
+			logger.addLog(tank, "Cannot send missile out of bounds.")
+			return
+		}
+
+		applyCost(tank, amount:missileAction.power)
 
 		//do missile stuff
+		//first find target location:
+		let target = missileAction.target
+
+		//find all the surrounding tiles: (array)
+		let surrounding = getLegalSurroundingPositions(target)
+
+		//drain energy.
+		if !isPositionEmpty(target) {
+			grid[target.row][target.col]!.energy -= missileAction.power * Constants.missileStrikeMultiple
+		}
+
+		for location in surrounding {
+			if !isPositionEmpty(location) {
+				grid[location.row][location.col]!.energy -= missileAction.power * Constants.missileStrikeMultipleCollateral
+			}
+		}
 	}
 
 	func actionRadar(tank:Tank, radarAction:RadarAction) {
@@ -157,6 +179,15 @@ extension TankWorld {
 		applyCost(tank, amount:Constants.costOfRadarByUnitsDistance[radarAction.range])
 
 		//do radar stuff
+		let results = findGameObjectsWithinRange(tank.position, range:radarAction.range)
+		var convert = [RadarResult]()
+
+		for i in results {
+			convert.append(RadarResult(position:i, id:grid[i.row][i.col]!.id, energy:grid[i.row][i.col]!.energy))
+		}
+
+		//set the tank's property to this.
+		tank.radarResults = convert
 	}
 
 	func actionSendMessage(tank:Tank, sendMessageAction:SendMessageAction) {
@@ -189,7 +220,7 @@ extension TankWorld {
 			logger.addLog(tank, "Insufficient Enerfy to reciese feme emessage.")
 		}
 
-		tank.receivedMessage = messageCenter.receiveMessage(id:receiveMessageAction.id)
+		tank.receivedMessage = messageCenter.receive(id:receiveMessageAction.id)
 	}
 
 	func actionDropMine(tank:Tank, dropMineAction:DropMineAction) {
@@ -204,9 +235,33 @@ extension TankWorld {
 			return
 		}
 
-		applyCost(tank, amount:dropMineAction.power)
+		applyCost(tank, amount:dropMineAction.energy)
 
-		//create the thing
+		//create the thing....
+
+		//find the position to drop it:
+		var dropSpot:Position!
+		repeat {
+			dropSpot = newPosition(position:tank.position, direction:getRandomDirection(), magnitude:1)
+
+			if dropMineAction.dropDirection != nil {
+				dropSpot = newPosition(position:tank.position, direction:dropMineAction.dropDirection!, magnitude:1)
+			}
+		} while isPositionEmpty(dropSpot) && isValidPosition(dropSpot)
+
+		//is it rover or mine -> create object to place
+		let rover:Mine!
+		if dropMineAction.isRover {
+			//its a rover
+			//create the rover as an object:
+			rover = Mine(row:dropSpot.row, col:dropSpot.col, objectType:.Rover, energy:dropMineAction.energy, id:"@=@}", isRover:true, roverMovementType: (dropMineAction.moveDirection == nil) ? "random" : "direction", roverMovementDirection:dropMineAction.moveDirection)
+		} else {
+			//its a mine
+			rover = Mine(row:dropSpot.row, col:dropSpot.col, objectType:.Mine, energy:dropMineAction.energy, id:"_/\\_", isRover:false)
+		}
+
+		//put rover on the board.
+		grid[dropSpot.row][dropSpot.col] = rover
 	}
 
 	//typing all this shit on the chromebook gave me arthritis and I had to redo it because it was lost somehow (i'm fucking retarded)
