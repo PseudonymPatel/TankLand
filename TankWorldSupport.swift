@@ -86,7 +86,7 @@ extension TankWorld {
 
 		var newObj = [T]()
 
-		for i in 0..<allObj.count {
+		for _ in 0..<allObj.count {
 			let rand = Int.random(in: 0..<allObj.count - newObj.count)
 			newObj.append(allObj[rand])
 		}
@@ -96,7 +96,7 @@ extension TankWorld {
 
 	//finds GO's within radius
 	func findGameObjectsWithinRange(_ position:Position, range:Int) -> [Position] {
-		return []
+		return findAllGameObjects().filter { distance($0.position, position) < range }.map { $0.position }
 	}
 
 	//return an array of all GO's
