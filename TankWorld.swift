@@ -102,9 +102,33 @@ class TankWorld {
 	func doTurn() {
 		var allObjects = findAllGameObjects() //get all the objects
 		allObjects = randomizeGameObjects(gameObjects: allObjects) //randomize, this will be order of execution
+
+
+		tanks = allObjects.filter{$0.objectType == .Tank}
+
+		for go in allObjects {
+			switch go.objectType {
+				case .Tank: applyCost(go,costLifeSupportTank)
+				case .Mine: applyCost(go,costLifeSupportMine)
+				case .Rover: applyCost(go,costLifeSupportRover)
+			}
+
+			if isDead(go) {
+				logger.addMajorLog(go, "has died of life support")
+				allObjects.remove(at: go)
+			}
+		}
+		
+		
+		
 		//do the logic here.
 
+		for tank in tanks {
+
+		}
+		print(logger.log[logger.turn])
 		self.turn += 1 //iterates the turn counter
+		logger.nextTurn();
 	}
 
 	//this is the driving method. The main method.

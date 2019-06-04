@@ -180,7 +180,7 @@ extension TankWorld {
 	}
 
 	//assumes that you've done error checking
-	func applyCost(_ tank:Tank, amount:Int) {
+	func applyCost(_ tank:GameObject, amount:Int) {
 		tank.useEnergy(amount:amount)
 	}
 }
