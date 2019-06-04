@@ -97,6 +97,10 @@ class TankWorld {
 		Grid(grid:grid).displayGrid()
 	}
 
+		func displayGrid() {
+		Grid(grid:grid).displayGrid()
+	}
+
 	//Computes a single turn of the game,
 	//DOES NOT print the grid.
 	func doTurn() {
@@ -105,7 +109,10 @@ class TankWorld {
 
 
 		tanks = allObjects.filter{$0.objectType == .Tank}
+		rovers = allObjects.filter{$0.objectType == .Rover}
 
+		var n = 0 //for below loop because GameObject isn't equatable
+		//does life support
 		for go in allObjects {
 			switch go.objectType {
 				case .Tank: applyCost(go,costLifeSupportTank)
@@ -115,17 +122,43 @@ class TankWorld {
 
 			if isDead(go) {
 				logger.addMajorLog(go, "has died of life support")
-				allObjects.remove(at: go)
+				continue
+				allObjects.remove(at: n)
 			}
+			n += 1
 		}
 		
+		//rovers move
+
+		for rover in rovers {
+
+		}
 		
-		
-		//do the logic here.
+		for tank in tanks {
+			handleRadar(tank:tank)
+		}
 
 		for tank in tanks {
-
+			handleSendMessage(tank:tank)
 		}
+
+		for tank in tanks {
+			handleReceiveMessage(tank:tank)
+		}
+
+		for tank in tanks {
+			handleShields(tank:tank)
+		}
+
+		for tank in tanks {
+			handleDropMine(tank:tank)
+			handleMissile(tank:tank)
+			handleMove(tank:tank)
+		}
+
+		//do the logic here.
+
+
 		print(logger.log[logger.turn])
 		self.turn += 1 //iterates the turn counter
 		logger.nextTurn();
