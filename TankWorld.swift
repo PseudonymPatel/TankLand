@@ -24,7 +24,7 @@ class TankWorld {
 	var gameOver:Bool = false
 
 	//another one of those vars IDK if I should make. It is referenced in the code, but I see no declaration.
-	var lastLivingTank:Int?//change to Tank type once implemented!
+	var lastLivingTank:Tank?//change to Tank type once implemented!
 
 	//the logger and the messageCenter specific to this running of TankWorld
 	var logger = Logger()
@@ -44,7 +44,7 @@ class TankWorld {
 	// -------------------------------------
 
 	//sets the winner of the game
-	func setWinner(lastTankStanding:Int) {//change to Tank type once implemented
+	func setWinner(lastTankStanding:Tank) {//change to Tank type once implemented
 		gameOver = true
 		lastLivingTank = lastTankStanding
 	}
@@ -101,9 +101,7 @@ class TankWorld {
 	func doTurn() {
 		var allObjects = findAllGameObjects() //get all the objects
 		allObjects = randomizeGameObjects(gameObjects: allObjects) //randomize, this will be order of execution
-
 		//do the logic here.
-
 
 		self.turn += 1 //iterates the turn counter
 	}
@@ -120,7 +118,7 @@ class TankWorld {
 			let input = readLine()!
 
 			switch input { //handle user input
-				case "run":
+				case "":
 					print("running one turn...")
 					doTurn()
 					displayGrid()
@@ -128,6 +126,11 @@ class TankWorld {
 					print("exiting interactive")
 					gameOver = true
 					break
+				case "d":
+					print("running until die")
+					while {
+
+					}
 				default:
 					print("Unknown command: \(input)")
 			} //end of input handling switch
