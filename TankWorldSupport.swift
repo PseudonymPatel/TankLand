@@ -96,7 +96,7 @@ extension TankWorld {
 
 	//finds GO's within radius
 	func findGameObjectsWithinRange(_ position:Position, range:Int) -> [Position] {
-		return findAllGameObjects().filter { distance($0.position, position) < range }.map { $0.position }
+		return findAllGameObjects().filter { distance($0.position, position) <= range }.map { $0.position }
 	}
 
 	//return an array of all GO's
