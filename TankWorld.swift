@@ -25,7 +25,7 @@ class TankWorld {
 
 	//another one of those vars IDK if I should make. It is referenced in the code, but I see no declaration.
 	var lastLivingTank:Tank?//change to Tank type once implemented!
-
+	var livingTanks:Int?
 	//the logger and the messageCenter specific to this running of TankWorld
 	var logger = Logger()
 	var messageCenter = MessageCenter()
@@ -52,6 +52,7 @@ class TankWorld {
 	func populateTankWorld() {
 		//this is sample implementation
 
+		livingTanks = findAllTanks().count
 	}
 
 	//adds an object to the grid.
@@ -118,26 +119,42 @@ class TankWorld {
 			let input = readLine()!
 
 			switch input { //handle user input
-				case "":
+				case let d where Int(input):
 					print("running one turn...")
-					doTurn()
-					displayGrid()
+					for _ in 0..<d {
+						doTurn()
+						displayGrid()
+					}
+				case "win":
+					while livingTanks > 1 {
+						doTurn()
+						displayGrid()
+					}
+
+					guard findAllTanks().length > 0, lastLivingTank = findAllTanks()[0] else {
+						fatalError("no living tanks at the end")
+					}
+
+					gameOver = true
+
 				case "quit":
 					print("exiting interactive")
 					gameOver = true
-					break
 				case "d":
 					print("running until die")
-					while {
-
+					let alive = livingTanks
+					while livingTanks >= alive {
+						doTurn()
+						displayGrid()
 					}
 				default:
-					print("Unknown command: \(input)")
+					doTurn()
+					displayGrid()
 			} //end of input handling switch
 
 			//the idea with gameOver is that it will be set in doTurn(), so we need the loop to check. Otherwise we could do while(true)
 		} while !gameOver
 
-		print("** WINNER IS \(lastLivingTank ?? 0) **")
+		print("\n** WINNER IS \(lastLivingTank!) **")
 	}
 }

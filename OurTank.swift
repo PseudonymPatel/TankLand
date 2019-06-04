@@ -57,3 +57,25 @@ class OurTank:Tank {
 		}
 	}
 }
+
+class JTank:Tank {
+	func getRandomDirection() -> Direction {
+		let directions:[Direction] = [.North, .NorthEast, .East, .SouthEast, .South, .SouthWest, .West, .NorthWest]
+		return directions[Int.random(in: ..<direction.count)]
+	}
+
+	override init(row:Int, col:Int, energy:Int, id:String, instructions:String) {
+		super.init(row:row, col:col, energy:energy, id:id, instructions:instructions)
+	}
+
+	override func computePreActions() {
+		addPreAction(preAction:ShieldAction(power:100))
+		super.computePreActions()
+	}
+
+	override func computePostActions() {
+		addPostAction(postAction:MoveAction(distance:1, direction: getRandomDirection()))
+		addPostAction(postAction:DropMineAction(power:500, isRover:true))
+		super.computePostActions()
+	}
+}
