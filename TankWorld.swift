@@ -107,31 +107,34 @@ class TankWorld {
 		var allObjects = findAllGameObjects() //get all the objects
 		allObjects = randomizeGameObjects(gameObjects: allObjects) //randomize, this will be order of execution
 
-
-		tanks = allObjects.filter{$0.objectType == .Tank}
-		rovers = allObjects.filter{$0.objectType == .Rover}
-
 		var n = 0 //for below loop because GameObject isn't equatable
 		//does life support
-		for go in allObjects {
+		lifeSupport: for go in allObjects {
 			switch go.objectType {
 				case .Tank: applyCost(go,costLifeSupportTank)
 				case .Mine: applyCost(go,costLifeSupportMine)
 				case .Rover: applyCost(go,costLifeSupportRover)
 			}
 
-			if isDead(go) {
+			if isDead(go) && findAllTanks().count != 1 {
 				logger.addMajorLog(go, "has died of life support")
 				continue
 				allObjects.remove(at: n)
+			} else {
+				setWinner(lastTankStanding: go)
+				break lifeSupport
 			}
 			n += 1
 		}
 		
+
+		tanks = allObjects.filter{$0.objectType == .Tank}
+		rovers = allObjects.filter{$0.objectType == .Rover}
+
 		//rovers move
 
 		for rover in rovers {
-
+			//????
 		}
 		
 		for tank in tanks {
@@ -155,8 +158,6 @@ class TankWorld {
 			handleMissile(tank:tank)
 			handleMove(tank:tank)
 		}
-
-		//do the logic here.
 
 
 		print(logger.log[logger.turn])
