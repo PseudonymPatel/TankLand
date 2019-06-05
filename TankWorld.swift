@@ -25,7 +25,7 @@ class TankWorld {
 
 	//another one of those vars IDK if I should make. It is referenced in the code, but I see no declaration.
 	var lastLivingTank:Tank?//change to Tank type once implemented!
-	var livingTanks:Int?
+	var livingTanks:Int = 0
 	//the logger and the messageCenter specific to this running of TankWorld
 	var logger = Logger()
 	var messageCenter = MessageCenter()
@@ -120,8 +120,12 @@ class TankWorld {
 	//sees if thank dea,d the n do the ded messgae
 	func doDeathStuff(_ tank:GameObject) {
 		if isDead(tank) {
-			logger.addLog(tank, "THE \"\"\"GameObject\"\"\" HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE")
+			logger.addLog(tank, "\u{001B}[7;33m   THE \"\"\"GameObject\"\"\" HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE   \u{001B}[0;00m")
 			grid[tank.position.row][tank.position.col] = nil
+		}
+
+		if findAllTanks().count == 1 {
+			setWinner(lastTankStanding: findAllTanks()[0])
 		}
 	}
 
@@ -131,28 +135,34 @@ class TankWorld {
 		var allObjects = findAllGameObjects() //get all the objects
 		allObjects = randomizeGameObjects(gameObjects: allObjects) //randomize, this will be order of execution
 
-		var n = 0 //for below loop because GameObject isn't equatable
+		var n = 0 //iterator for while loop
 		//does life support
-		lifeSupport: for go in allObjects {
+		while n < allObjects.count {
+			let go = allObjects[n]
+
+			logger.addLog(go, "Charging life support")
 			switch go.objectType {
 				case .Tank: applyCost(go, amount:Constants.costLifeSupportTank)
 				case .Mine: applyCost(go, amount:Constants.costLifeSupportMine)
 				case .Rover: applyCost(go,amount:Constants.costLifeSupportRover)
 			}
 
-			if isDead(go) && findAllTanks().count != 1 {
-				logger.addMajorLog(go, "has died of life support")
-				continue
+			if isDead(go) {
+				doDeathStuff(go)
 				allObjects.remove(at: n)
-			} else {
-				setWinner(lastTankStanding: go as! Tank)
-				break lifeSupport
+				continue //go to the start without iterating n
 			}
+
+			if findAllTanks().count == 1 {
+				setWinner(lastTankStanding: go as! Tank)
+				return //end the turn early
+			}
+
 			n += 1
 		}
 
-		let tanks = allObjects.filter{$0.objectType == .Tank}
-		let rovers = allObjects.filter{$0.objectType == .Rover}
+		let tanks = randomizeGameObjects(gameObjects: findAllGameObjects().filter{$0.objectType == .Tank})
+		let rovers = randomizeGameObjects(gameObjects: findAllGameObjects().filter{$0.objectType == .Rover})
 
 		//rovers move
 
@@ -188,10 +198,15 @@ class TankWorld {
 			doDeathStuff(tank)
 		}
 
+		for tank in tanks {
+			let t = tank as! Tank
+			t.preActions = [:]
+			t.postActions = [:]
+		}
 
-		print(logger.log[logger.turn])
+		print(logger.getTurnLog())
 		self.turn += 1 //iterates the turn counter
-		logger.nextTurn();
+		logger.nextTurn() //iterates the logger turn counter
 	}
 
 	//this is the driving method. The main method.
@@ -205,21 +220,17 @@ class TankWorld {
 			let input = readLine()!
 
 			switch input { //handle user input
-				case let d where Int(input):
-					print("running one turn...")
-					for _ in 0..<Int(d) {
-						doTurn()
-						displayGrid()
-					}
 				case "win":
-					while livingTanks! > 1 {
+					while livingTanks > 1 {
 						doTurn()
 						displayGrid()
 					}
 
-					guard findAllTanks().count > 0, lastLivingTank = findAllTanks()[0] as Tank else {
+					guard findAllTanks().count > 0 else {
 						fatalError("no living tanks at the end")
 					}
+
+					lastLivingTank = findAllTanks()[0]
 
 					gameOver = true
 
@@ -234,6 +245,14 @@ class TankWorld {
 						displayGrid()
 					}
 				default:
+					if let d = Int(input) {
+						print("running one turn...")
+						for _ in 0..<Int(d) {
+							doTurn()
+							displayGrid()
+						}
+					}
+
 					doTurn()
 					displayGrid()
 			} //end of input handling switch
@@ -241,6 +260,6 @@ class TankWorld {
 			//the idea with gameOver is that it will be set in doTurn(), so we need the loop to check. Otherwise we could do while(true)
 		} while !gameOver
 
-		print("\n** WINNER IS \(lastLivingTank!) **")
+		print("\n\u{001B}[7;34m** WINNER IS \(lastLivingTank!) **\u{001B}[0;00m")
 	}
 }

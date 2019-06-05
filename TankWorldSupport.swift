@@ -82,13 +82,14 @@ extension TankWorld {
 
 	//given array of GO, return array w/ same objects but randomized.
 	func randomizeGameObjects<T:GameObject>(gameObjects: [T]) -> [T] {
-		let allObj = findAllGameObjects() as! [T]
+		var allObj = findAllGameObjects() as! [T]
 
 		var newObj = [T]()
 
-		for _ in 0..<allObj.count {
-			let rand = Int.random(in: 0..<allObj.count - newObj.count)
+		while allObj.count > 0 {
+			let rand = Int.random(in: 0..<allObj.count)
 			newObj.append(allObj[rand])
+			allObj.remove(at: rand)
 		}
 
 		return newObj
