@@ -183,4 +183,13 @@ extension TankWorld {
 	func applyCost(_ tank:GameObject, amount:Int) {
 		tank.useEnergy(amount:amount)
 	}
+
+	func getRandomEmptyPosition() -> Position {
+		while true {
+			let search:Position = [Int.random(in: 0...14), Int.random(in: 0...14)]
+			if isPositionEmpty(search) {
+				return search
+			}
+		}
+	}
 }

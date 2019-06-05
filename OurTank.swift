@@ -61,7 +61,7 @@ class OurTank:Tank {
 class JTank:Tank {
 	func getRandomDirection() -> Direction {
 		let directions:[Direction] = [.North, .NorthEast, .East, .SouthEast, .South, .SouthWest, .West, .NorthWest]
-		return directions[Int.random(in: ..<direction.count)]
+		return directions[Int.random(in: ..<directions.count)]
 	}
 
 	override init(row:Int, col:Int, energy:Int, id:String, instructions:String) {

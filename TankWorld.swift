@@ -50,7 +50,11 @@ class TankWorld {
 	}
 
 	func populateTankWorld() {
-		//this is sample implementation
+
+		//our tanks
+		let randEmpty = getRandomEmptyPosition()
+		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"SHEE", instructions:"THIS TANK SUCKS"))
+		//jtanks
 
 		livingTanks = findAllTanks().count
 	}
@@ -118,9 +122,9 @@ class TankWorld {
 				allObjects.remove(at: go)
 			}
 		}
-		
-		
-		
+
+
+
 		//do the logic here.
 
 		for tank in tanks {
