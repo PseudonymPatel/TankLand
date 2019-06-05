@@ -36,6 +36,7 @@ class TankWorld {
 	init() {
 		self.grid = Array(repeating: Array(repeating: nil, count: GRID_WIDTH), count: GRID_HEIGHT) //create a grid
 		self.turn = 0
+		populateTankWorld()
 	}
 
 
@@ -52,7 +53,7 @@ class TankWorld {
 	func populateTankWorld() {
 
 		//our tanks
-		let randEmpty = getRandomEmptyPosition()
+		var randEmpty = getRandomEmptyPosition()
 		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"SHEE", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
@@ -116,8 +117,12 @@ class TankWorld {
 		Grid(grid:grid).displayGrid()
 	}
 
-		func displayGrid() {
-		Grid(grid:grid).displayGrid()
+	//sees if thank dea,d the n do the ded messgae
+	func doDeathStuff(_ tank:GameObject) {
+		if isDead(tank) {
+			logger.addLog(tank, "THE \"\"\"GameObject\"\"\" HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE")
+			grid[tank.position.row][tank.position.col] = nil
+		}
 	}
 
 	//Computes a single turn of the game,
@@ -130,9 +135,9 @@ class TankWorld {
 		//does life support
 		lifeSupport: for go in allObjects {
 			switch go.objectType {
-				case .Tank: applyCost(go,costLifeSupportTank)
-				case .Mine: applyCost(go,costLifeSupportMine)
-				case .Rover: applyCost(go,costLifeSupportRover)
+				case .Tank: applyCost(go, amount:Constants.costLifeSupportTank)
+				case .Mine: applyCost(go, amount:Constants.costLifeSupportMine)
+				case .Rover: applyCost(go,amount:Constants.costLifeSupportRover)
 			}
 
 			if isDead(go) && findAllTanks().count != 1 {
@@ -140,41 +145,47 @@ class TankWorld {
 				continue
 				allObjects.remove(at: n)
 			} else {
-				setWinner(lastTankStanding: go)
+				setWinner(lastTankStanding: go as! Tank)
 				break lifeSupport
 			}
 			n += 1
 		}
 
-		tanks = allObjects.filter{$0.objectType == .Tank}
-		rovers = allObjects.filter{$0.objectType == .Rover}
+		let tanks = allObjects.filter{$0.objectType == .Tank}
+		let rovers = allObjects.filter{$0.objectType == .Rover}
 
 		//rovers move
 
 		for rover in rovers {
 			//????
+			doDeathStuff(rover)
 		}
 
 		for tank in tanks {
-			handleRadar(tank:tank)
+			handleRadar(tank:tank as! Tank)
+			doDeathStuff(tank as! Tank)
 		}
 
 		for tank in tanks {
-			handleSendMessage(tank:tank)
+			handleSendMessage(tank:tank as! Tank)
+			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			handleReceiveMessage(tank:tank)
+			handleReceiveMessage(tank:tank as! Tank)
+			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			handleShields(tank:tank)
+			handleShields(tank:tank as! Tank)
+			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			handleDropMine(tank:tank)
-			handleMissile(tank:tank)
-			handleMove(tank:tank)
+			handleDropMine(tank:tank as! Tank)
+			handleMissile(tank:tank as! Tank)
+			handleMove(tank:tank as! Tank)
+			doDeathStuff(tank)
 		}
 
 
@@ -186,7 +197,6 @@ class TankWorld {
 	//this is the driving method. The main method.
 	//will run your commands until a single tank remains.
 	func driver() {
-		populateTankWorld() //creates all tanks at random locations.
 		displayGrid() //display the starting grid.
 
 		repeat { //same as a while loop, makes sure there is at least one execution of loop body.
@@ -197,17 +207,17 @@ class TankWorld {
 			switch input { //handle user input
 				case let d where Int(input):
 					print("running one turn...")
-					for _ in 0..<d {
+					for _ in 0..<Int(d) {
 						doTurn()
 						displayGrid()
 					}
 				case "win":
-					while livingTanks > 1 {
+					while livingTanks! > 1 {
 						doTurn()
 						displayGrid()
 					}
 
-					guard findAllTanks().length > 0, lastLivingTank = findAllTanks()[0] else {
+					guard findAllTanks().count > 0, lastLivingTank = findAllTanks()[0] as Tank else {
 						fatalError("no living tanks at the end")
 					}
 
