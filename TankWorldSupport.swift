@@ -115,7 +115,7 @@ extension TankWorld {
 	//find all ROVERS
 	func findAllRovers() -> [Mine] {
 		let GOs = findAllGameObjects()
-		let rovers = GOs.filter{$0.objectType == .Rover}
+		let rovers = GOs.filter {$0.objectType == .Rover}
 		return rovers as! [Mine]
 	}
 

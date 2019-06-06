@@ -30,9 +30,9 @@ class OurTank:Tank {
 		return (distance(lhs.position, self.position) < distance(rhs.position, self.position))
 	}
 
-	override init(row:Int, col:Int, energy:Int, id:String, instructions:String) {
-		super.init(row:row, col:col, energy:energy, id:id, instructions:instructions)
-	}
+	//override init(row:Int, col:Int, energy:Int, id:String, instructions:String) {
+	//	super.init(row:row, col:col, energy:energy, id:id, instructions:instructions)
+	//}
 
 	override func computePreActions() {
 		addPreAction(preAction: ShieldAction(power:200)) //create a shield with 1600 health
@@ -64,9 +64,9 @@ class JTank:Tank {
 		return directions[Int.random(in: 0..<directions.count)]
 	}
 
-	override init(row:Int, col:Int, energy:Int, id:String, instructions:String) {
-		super.init(row:row, col:col, energy:energy, id:id, instructions:instructions)
-	}
+	//override init(row:Int, col:Int, energy:Int, id:String, instructions:String) {
+	//	super.init(row:row, col:col, energy:energy, id:id, instructions:instructions)
+	//}
 
 	override func computePreActions() {
 		addPreAction(preAction:ShieldAction(power:100))
