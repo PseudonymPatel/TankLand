@@ -70,12 +70,10 @@ class JTank:Tank {
 
 	override func computePreActions() {
 		addPreAction(preAction:ShieldAction(power:100))
-		super.computePreActions()
 	}
 
 	override func computePostActions() {
 		addPostAction(postAction:MoveAction(distance:1, direction: getRandomDirection()))
 		addPostAction(postAction:DropMineAction(power:500, isRover:true))
-		super.computePostActions()
 	}
 }

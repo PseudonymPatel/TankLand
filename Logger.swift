@@ -50,7 +50,9 @@ struct Logger {
 		self.log[self.turn] += ("    " + gameobject.id + " " + restOfLog + "\n")
 	}
 
-
+	mutating func addLog(_ log:String) {
+		self.log[self.turn] += (log + "\n")
+	}
 	//same as addLog except the message is marked with ** to represent imporant
 	mutating func addMajorLog(_ gameobject: GameObject, _ restOfLog: String) {
 		self.log[self.turn] += "****" + gameobject.id + " " + restOfLog + "\n"

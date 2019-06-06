@@ -108,6 +108,7 @@ class TankWorld {
 
 		//add the object to the new space.
 		grid[toRow][toCol] = foundObject
+		foundObject.position = [toRow, toCol] //give the info back to the GO
 	}
 
 
@@ -120,7 +121,7 @@ class TankWorld {
 	//sees if thank dea,d the n do the ded messgae
 	func doDeathStuff(_ tank:GameObject) {
 		if isDead(tank) {
-			logger.addLog(tank, "\u{001B}[7;33m   THE \"\"\"GameObject\"\"\" HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE   \u{001B}[0;00m")
+			logger.addLog(tank, "\u{001B}[7;33m   THE GameObject HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE   \u{001B}[0;00m")
 			grid[tank.position.row][tank.position.col] = nil
 		}
 
@@ -161,45 +162,83 @@ class TankWorld {
 			n += 1
 		}
 
-		let tanks = randomizeGameObjects(gameObjects: findAllGameObjects().filter{$0.objectType == .Tank})
-		let rovers = randomizeGameObjects(gameObjects: findAllGameObjects().filter{$0.objectType == .Rover})
+		let tanks = randomizeGameObjects(gameObjects: findAllTanks())//.map {$0 as! Tank}
+		let rovers = randomizeGameObjects(gameObjects: findAllRovers()) //fails on this goddamn line
+
+		for tank in tanks {
+			let t = tank
+			t.computePreActions()
+			t.computePostActions()
+		}
 
 		//rovers move
-
 		for rover in rovers {
-			//????
+
+			//find a position to move rover
+			var position:Position = getLegalSurroundingPositions(rover.position)[Int.random(in: 0..<getLegalSurroundingPositions(rover.position).count)]
+			if rover.roverMovementType == "direction" {
+				let temp = newPosition(position: rover.position, direction: rover.roverMovementDirection!, magnitude:1)
+				if temp.row < 15 && temp.col < 15 && temp.row >= 0 && temp.col >= 0 {
+					position = temp
+				} else {
+					position = [-1,-1] //out of bounds
+				}
+			}
+
+			//if there is a position to move to...
+			if position.row == -1 && position.col == -1 && rover.energy >= Constants.costOfMovingRover {
+				//if there is an object at the position
+				rover.energy -= Constants.costOfMovingRover
+				if let killObj = grid[position.row][position.col] {
+					grid[rover.position.row][rover.position.col] = nil //remove rover
+					killObj.energy -= rover.energy //take away energy
+					doDeathStuff(killObj) //see if ded. will remove if ded
+				} else {
+					//nothing, so move.
+					grid[rover.position.row][rover.position.col] = nil
+					grid[position.row][position.col] = rover
+					rover.position = position
+				}
+			}
+
+			//just in case??
 			doDeathStuff(rover)
+
+			//in case this mine just killed the last tank
+			if gameOver {
+				return
+			}
 		}
 
 		for tank in tanks {
-			handleRadar(tank:tank as! Tank)
-			doDeathStuff(tank as! Tank)
-		}
-
-		for tank in tanks {
-			handleSendMessage(tank:tank as! Tank)
+			handleRadar(tank:tank)
 			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			handleReceiveMessage(tank:tank as! Tank)
+			handleSendMessage(tank:tank)
 			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			handleShields(tank:tank as! Tank)
+			handleReceiveMessage(tank:tank)
 			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			handleDropMine(tank:tank as! Tank)
-			handleMissile(tank:tank as! Tank)
-			handleMove(tank:tank as! Tank)
+			handleShields(tank:tank)
 			doDeathStuff(tank)
 		}
 
 		for tank in tanks {
-			let t = tank as! Tank
+			handleDropMine(tank:tank)
+			handleMissile(tank:tank)
+			handleMove(tank:tank)
+			doDeathStuff(tank)
+		}
+
+		for tank in tanks {
+			let t = tank
 			t.preActions = [:]
 			t.postActions = [:]
 		}

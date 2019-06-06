@@ -17,7 +17,6 @@ extension TankWorld {
 		guard let radarAction = tank.preActions[.Radar] else {
 			return
 		}
-
 		actionRadar(tank:tank, radarAction:radarAction as! RadarAction)
 	}
 
@@ -86,26 +85,48 @@ extension TankWorld {
 
 		logger.addLog(tank, "Moving tank \(moveAction)")
 
+		//if in distance
 		guard moveAction.distance <= 3, moveAction.distance > 0 else {
 			logger.addLog(tank, "Tank cannot move so far.")
 			return
 		}
 
+		//if energy available
 		guard !isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance-1]) else {
 			logger.addLog(tank, "Insufficent nrg to move.")
 			return
 		}
 
+		//get a position to move to
 		let position = newPosition(position:tank.position, direction:moveAction.direction, magnitude:moveAction.distance)
 
-		guard grid[position.row][position.col] == nil else {
-			logger.addLog(tank, "Object already at position.")
+		guard isValidPosition(position) else {
+			logger.addLog(tank, "tried to move to an invalid position.")
 			return
+		}
+
+		//see if there is a mine or a rover or tank at newPos:
+		if let obj = grid[position.row][position.col] {
+			if obj.objectType == .Tank {
+				logger.addLog(tank, "tried to move to a already taken spot!")
+				return
+			}
 		}
 
 		applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance-1])
 
-		moveObject(tank, toRow:position.row, toCol:position.col)
+		//if there is a mine/rover there:
+		if let mine = grid[position.row][position.col] {
+			tank.energy -= mine.energy * Constants.mineStrikeMultiple
+			if isDead(tank) {
+				doDeathStuff(tank)
+			} else {
+				//put the tank there
+				moveObject(tank, toRow:position.row, toCol:position.col)
+			}
+		} else { //just move the thing
+			moveObject(tank, toRow:position.row, toCol:position.col)
+		}
 	}
 
 	func actionShields(tank:Tank, shieldAction:ShieldAction) {
