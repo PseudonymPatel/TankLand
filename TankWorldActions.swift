@@ -21,7 +21,7 @@ extension TankWorld {
 	}
 
 	func handleMove(tank:Tank) {
-		guard let moveAction = tank.preActions[.Move] else {
+		guard let moveAction = tank.postActions[.Move] else {
 			return
 		}
 
@@ -38,7 +38,7 @@ extension TankWorld {
 	}
 
 	func handleMissile(tank:Tank) {
-		guard let missileAction = tank.preActions[.Missile] else {
+		guard let missileAction = tank.postActions[.Missile] else {
 			return
 		}
 
@@ -66,7 +66,7 @@ extension TankWorld {
 
 	//for both mine and rover.
 	func handleDropMine(tank:Tank) {
-		guard let dropMineAction = tank.preActions[.DropMine] else {
+		guard let dropMineAction = tank.postActions[.DropMine] else {
 			return
 		}
 
@@ -96,7 +96,6 @@ extension TankWorld {
 			logger.addLog(tank, "Insufficent nrg to move.")
 			return
 		}
-
 		//get a position to move to
 		let position = newPosition(position:tank.position, direction:moveAction.direction, magnitude:moveAction.distance)
 
@@ -117,6 +116,7 @@ extension TankWorld {
 
 		//if there is a mine/rover there:
 		if let mine = grid[position.row][position.col] {
+			logger.addLog(tank, "about to hit mine or rover")
 			tank.energy -= mine.energy * Constants.mineStrikeMultiple
 			if isDead(tank) {
 				doDeathStuff(tank)
@@ -172,15 +172,16 @@ extension TankWorld {
 
 		//find all the surrounding tiles: (array)
 		let surrounding = getLegalSurroundingPositions(target)
-
 		//drain energy.
 		if !isPositionEmpty(target) {
 			grid[target.row][target.col]!.energy -= missileAction.power * Constants.missileStrikeMultiple
+			doDeathStuff(grid[target.row][target.col]!)
 		}
 
 		for location in surrounding {
 			if !isPositionEmpty(location) {
 				grid[location.row][location.col]!.energy -= missileAction.power * Constants.missileStrikeMultipleCollateral
+				doDeathStuff(grid[location.row][location.col]!)
 			}
 		}
 	}
@@ -261,28 +262,31 @@ extension TankWorld {
 		//create the thing....
 
 		//find the position to drop it:
-		var dropSpot:Position!
-		repeat {
-			dropSpot = newPosition(position:tank.position, direction:getRandomDirection(), magnitude:1)
-
-			if dropMineAction.dropDirection != nil {
-				dropSpot = newPosition(position:tank.position, direction:dropMineAction.dropDirection!, magnitude:1)
+		var dropSpot = findFreeAjacent(tank.position)
+		if dropMineAction.dropDirection != nil {
+			dropSpot = newPosition(position: tank.position, direction:dropMineAction.dropDirection!, magnitude:1)
+			if !isValidPosition(dropSpot!) {
+				dropSpot = [-1,-1]
 			}
-		} while isPositionEmpty(dropSpot) && isValidPosition(dropSpot)
+		}
 
 		//is it rover or mine -> create object to place
 		let rover:Mine!
+		guard dropSpot!.row != -1, dropSpot!.col != -1 else {
+			return
+		}
+
 		if dropMineAction.isRover {
 			//its a rover
 			//create the rover as an object:
-			rover = Mine(row:dropSpot.row, col:dropSpot.col, objectType:.Rover, energy:dropMineAction.energy, id:"@=@}", isRover:true, roverMovementType: (dropMineAction.moveDirection == nil) ? "random" : "direction", roverMovementDirection:dropMineAction.moveDirection)
+			rover = Mine(row:dropSpot!.row, col:dropSpot!.col, objectType:.Rover, energy:dropMineAction.energy, id:"@=@}", isRover:true, roverMovementType: (dropMineAction.moveDirection == nil) ? "random" : "direction", roverMovementDirection:dropMineAction.moveDirection)
 		} else {
 			//its a mine
-			rover = Mine(row:dropSpot.row, col:dropSpot.col, objectType:.Mine, energy:dropMineAction.energy, id:"_/\\_", isRover:false)
+			rover = Mine(row:dropSpot!.row, col:dropSpot!.col, objectType:.Mine, energy:dropMineAction.energy, id:"_/\\_", isRover:false)
 		}
 
 		//put rover on the board.
-		grid[dropSpot.row][dropSpot.col] = rover
+		grid[dropSpot!.row][dropSpot!.col] = rover
 	}
 
 	//typing all this shit on the chromebook gave me arthritis and I had to redo it because it was lost somehow (i'm fucking retarded)

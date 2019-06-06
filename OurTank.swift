@@ -74,6 +74,6 @@ class JTank:Tank {
 
 	override func computePostActions() {
 		addPostAction(postAction:MoveAction(distance:1, direction: getRandomDirection()))
-		addPostAction(postAction:DropMineAction(power:500, isRover:true))
+		addPostAction(postAction:DropMineAction(power:500, isRover:false))
 	}
 }

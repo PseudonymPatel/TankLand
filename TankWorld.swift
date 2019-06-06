@@ -148,7 +148,7 @@ class TankWorld {
 				case .Rover: applyCost(go,amount:Constants.costLifeSupportRover)
 			}
 
-			if isDead(go) {
+			if isDead(go) || go.energy < 1 {
 				doDeathStuff(go)
 				allObjects.remove(at: n)
 				continue //go to the start without iterating n
@@ -162,18 +162,40 @@ class TankWorld {
 			n += 1
 		}
 
-		let tanks = randomizeGameObjects(gameObjects: findAllTanks())//.map {$0 as! Tank}
-		let rovers = randomizeGameObjects(gameObjects: findAllRovers()) //fails on this goddamn line
+		var tanks = randomizeGameObjects(gameObjects: findAllGameObjects())//.map {$0 as! Tank}
+		n = 0
+		while n < tanks.count {
+			if(tanks[n].objectType == .Mine || tanks[n].objectType == .Rover) {
+				tanks.remove(at: n)
+				continue
+			}
+			n += 1
+		}
+
+		var rovers = randomizeGameObjects(gameObjects: findAllGameObjects())
+		n = 0
+		while n < rovers.count {
+			if (rovers[n].objectType == .Tank || rovers[n].objectType == .Mine) {
+				rovers.remove(at: n)
+				continue
+			}
+			n += 1
+		}
+
+		//let rovers = randomizeGameObjects(gameObjects: findAllRovers()) //fails on this goddamn line
 
 		for tank in tanks {
-			let t = tank
+			let t = tank as! Tank
 			t.computePreActions()
 			t.computePostActions()
 		}
 
 		//rovers move
 		for rover in rovers {
-
+			guard let rover = rover as? Mine else {
+				print("not a mine")
+				break
+			}
 			//find a position to move rover
 			var position:Position = getLegalSurroundingPositions(rover.position)[Int.random(in: 0..<getLegalSurroundingPositions(rover.position).count)]
 			if rover.roverMovementType == "direction" {
@@ -211,39 +233,42 @@ class TankWorld {
 		}
 
 		for tank in tanks {
-			handleRadar(tank:tank)
-			doDeathStuff(tank)
+			handleRadar(tank:tank as! Tank)
 		}
 
 		for tank in tanks {
-			handleSendMessage(tank:tank)
-			doDeathStuff(tank)
+			handleSendMessage(tank:tank as! Tank)
 		}
 
 		for tank in tanks {
-			handleReceiveMessage(tank:tank)
-			doDeathStuff(tank)
+			handleReceiveMessage(tank:tank as! Tank)
 		}
 
 		for tank in tanks {
-			handleShields(tank:tank)
-			doDeathStuff(tank)
+			handleShields(tank:tank as! Tank)
 		}
 
 		for tank in tanks {
-			handleDropMine(tank:tank)
-			handleMissile(tank:tank)
-			handleMove(tank:tank)
-			doDeathStuff(tank)
+			handleDropMine(tank:tank as! Tank)
+			handleMissile(tank:tank as! Tank)
+			handleMove(tank:tank as! Tank)
+			if gameOver {
+				return
+			}
 		}
 
 		for tank in tanks {
-			let t = tank
+			let t = tank as! Tank
 			t.preActions = [:]
 			t.postActions = [:]
 		}
 
 		print(logger.getTurnLog())
+
+		if gameOver {
+			return
+		}
+
 		self.turn += 1 //iterates the turn counter
 		logger.nextTurn() //iterates the logger turn counter
 	}

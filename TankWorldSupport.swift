@@ -25,17 +25,17 @@ extension TankWorld {
 				componentRow = -magnitude
 				componentCol = 0
 			case .NorthWest:
-				componentRow = Int(sqrt(2)*Double(-magnitude))
-				componentCol = Int(sqrt(2)*Double(magnitude))
+				componentRow = -magnitude
+				componentCol = magnitude
 			case .NorthEast:
-				componentRow = Int(sqrt(2)*Double(magnitude))
-				componentCol = Int(sqrt(2)*Double(magnitude))
+				componentRow = magnitude
+				componentCol = magnitude
 			case .SouthEast:
-				componentRow = Int(sqrt(2)*Double(magnitude))
-				componentCol = Int(sqrt(2)*Double(-magnitude))
+				componentRow = magnitude
+				componentCol = -magnitude
 			case .SouthWest:
-				componentRow = Int(sqrt(2)*Double(-magnitude))
-				componentCol = Int(sqrt(2)*Double(-magnitude))
+				componentRow = -magnitude
+				componentCol = -magnitude
 		}
 
 		return [componentRow + originRow, originCol + componentCol]
