@@ -92,7 +92,7 @@ extension TankWorld {
 		}
 
 		//if energy available
-		guard !isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance-1]) else {
+		guard isEnergyAvailable(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance-1]) else {
 			logger.addLog(tank, "Insufficent nrg to move.")
 			return
 		}
@@ -122,6 +122,7 @@ extension TankWorld {
 				doDeathStuff(tank)
 			} else {
 				//put the tank there
+				grid[mine.position.row][mine.position.col] = nil
 				moveObject(tank, toRow:position.row, toCol:position.col)
 			}
 		} else { //just move the thing
@@ -263,32 +264,43 @@ extension TankWorld {
 
 		//find the position to drop it:
 		var dropSpot = findFreeAjacent(tank.position)
+
+		guard dropSpot != nil else {
+			logger.addLog(tank, "No place to put mine")
+			return
+		}
+
+		//if there is a direction to drop, try to use that.
 		if dropMineAction.dropDirection != nil {
-			dropSpot = newPosition(position: tank.position, direction:dropMineAction.dropDirection!, magnitude:1)
-			if !isValidPosition(dropSpot!) {
+			let temp = newPosition(position: tank.position, direction:dropMineAction.dropDirection!, magnitude:1)
+			if isValidPosition(temp) && isPositionEmpty(temp) {
+				dropSpot = temp
+			} else {
 				dropSpot = [-1,-1]
 			}
 		}
 
+		guard let drop = dropSpot else {
+			print("Could not get dropSpot in dropMineAction")
+			return
+		}
+
 		//is it rover or mine -> create object to place
 		let rover:Mine!
-		guard dropSpot!.row != -1, dropSpot!.col != -1 else {
+		guard drop.row != -1, drop.col != -1 else {
 			return
 		}
 
 		if dropMineAction.isRover {
 			//its a rover
 			//create the rover as an object:
-			rover = Mine(row:dropSpot!.row, col:dropSpot!.col, objectType:.Rover, energy:dropMineAction.energy, id:"@=@}", isRover:true, roverMovementType: (dropMineAction.moveDirection == nil) ? "random" : "direction", roverMovementDirection:dropMineAction.moveDirection)
+			rover = Mine(row:drop.row, col:drop.col, objectType:.Rover, energy:dropMineAction.energy, id:"@=@}", isRover:true, roverMovementType: (dropMineAction.moveDirection == nil) ? "random" : "direction", roverMovementDirection:dropMineAction.moveDirection)
 		} else {
 			//its a mine
-			rover = Mine(row:dropSpot!.row, col:dropSpot!.col, objectType:.Mine, energy:dropMineAction.energy, id:"_/\\_", isRover:false)
+			rover = Mine(row:drop.row, col:drop.col, objectType:.Mine, energy:dropMineAction.energy, id:"_/\\_", isRover:false)
 		}
 
 		//put rover on the board.
-		grid[dropSpot!.row][dropSpot!.col] = rover
+		grid[drop.row][drop.col] = rover
 	}
-
-	//typing all this shit on the chromebook gave me arthritis and I had to redo it because it was lost somehow (i'm fucking retarded)
-	//i need to buy a good frikin keyboard.
 }

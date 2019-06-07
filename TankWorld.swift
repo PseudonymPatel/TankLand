@@ -24,7 +24,7 @@ class TankWorld {
 	var gameOver:Bool = false
 
 	//another one of those vars IDK if I should make. It is referenced in the code, but I see no declaration.
-	var lastLivingTank:Tank?//change to Tank type once implemented!
+	var lastLivingTank:GameObject?//change to Tank type once implemented!
 	var livingTanks:Int = 0
 	//the logger and the messageCenter specific to this running of TankWorld
 	var logger = Logger()
@@ -45,7 +45,7 @@ class TankWorld {
 	// -------------------------------------
 
 	//sets the winner of the game
-	func setWinner(lastTankStanding:Tank) {//change to Tank type once implemented
+	func setWinner(lastTankStanding:GameObject) {//change to Tank type once implemented
 		gameOver = true
 		lastLivingTank = lastTankStanding
 	}
@@ -87,28 +87,13 @@ class TankWorld {
 
 	//moves object to a Position
 	func moveObject(_ object:GameObject, toRow:Int, toCol:Int) {
-		//find the object that needs to be moved.
-		var foundObject:GameObject! //will be inited once object found.
 
-		//search sequentially for object
-		objectFinder: for row in 0..<GRID_HEIGHT {
-			for col in 0..<GRID_WIDTH {
-				if let maybeObject = grid[row][col] { //if object at the grid point
-					if maybeObject.id == object.id { //if they are same object
-						foundObject = maybeObject //classes passed by reference, so they are the same item.
-						grid[row][col] = nil //remove the object here, because it is moving!
-						break objectFinder // breaks the full loop if object is found
-					}
-				}
-			}
-		}
-
-		//make sure that there is an object found!
-		assert(foundObject != nil, "The object to move (\(object)) was not found.")
+		//delete the current space
+		grid[object.position.row][object.position.col] = nil
 
 		//add the object to the new space.
-		grid[toRow][toCol] = foundObject
-		foundObject.position = [toRow, toCol] //give the info back to the GO
+		grid[toRow][toCol] = object
+		object.position = [toRow, toCol] //give the info back to the GO
 	}
 
 
@@ -123,6 +108,7 @@ class TankWorld {
 		if isDead(tank) {
 			logger.addLog(tank, "\u{001B}[7;33m   THE GameObject HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE   \u{001B}[0;00m")
 			grid[tank.position.row][tank.position.col] = nil
+			livingTanks -= 1
 		}
 
 		if findAllTanks().count == 1 {
@@ -133,6 +119,7 @@ class TankWorld {
 	//Computes a single turn of the game,
 	//DOES NOT print the grid.
 	func doTurn() {
+		livingTanks = findAllTanks().count
 		var allObjects = findAllGameObjects() //get all the objects
 		allObjects = randomizeGameObjects(gameObjects: allObjects) //randomize, this will be order of execution
 
@@ -141,7 +128,7 @@ class TankWorld {
 		while n < allObjects.count {
 			let go = allObjects[n]
 
-			logger.addLog(go, "Charging life support")
+			logger.addLog(go, "is being charged life support")
 			switch go.objectType {
 				case .Tank: applyCost(go, amount:Constants.costLifeSupportTank)
 				case .Mine: applyCost(go, amount:Constants.costLifeSupportMine)
@@ -155,7 +142,8 @@ class TankWorld {
 			}
 
 			if findAllTanks().count == 1 {
-				setWinner(lastTankStanding: go as! Tank)
+				setWinner(lastTankStanding: go)
+				print(logger.getTurnLog())
 				return //end the turn early
 			}
 
@@ -200,7 +188,7 @@ class TankWorld {
 			var position:Position = getLegalSurroundingPositions(rover.position)[Int.random(in: 0..<getLegalSurroundingPositions(rover.position).count)]
 			if rover.roverMovementType == "direction" {
 				let temp = newPosition(position: rover.position, direction: rover.roverMovementDirection!, magnitude:1)
-				if temp.row < 15 && temp.col < 15 && temp.row >= 0 && temp.col >= 0 {
+				if isValidPosition(temp) {
 					position = temp
 				} else {
 					position = [-1,-1] //out of bounds
@@ -208,7 +196,7 @@ class TankWorld {
 			}
 
 			//if there is a position to move to...
-			if position.row == -1 && position.col == -1 && rover.energy >= Constants.costOfMovingRover {
+			if isValidPosition(position) && rover.energy >= Constants.costOfMovingRover {
 				//if there is an object at the position
 				rover.energy -= Constants.costOfMovingRover
 				if let killObj = grid[position.row][position.col] {
@@ -290,17 +278,17 @@ class TankWorld {
 						displayGrid()
 					}
 
-					guard findAllTanks().count > 0 else {
-						fatalError("no living tanks at the end")
+					guard findAllTanks().count == 0 else {
+						fatalError("no or too many living tanks at the end: \(findAllTanks().count)")
 					}
 
-					lastLivingTank = findAllTanks()[0]
+					lastLivingTank = findAllTanks()[0] as GameObject
 
 					gameOver = true
 
 				case "quit":
 					print("exiting interactive")
-					gameOver = true
+					return
 				case "d":
 					print("running until die")
 					let alive = livingTanks

@@ -1,2 +1,2 @@
 #!/bin/bash
-swiftc -o main *.swift Actions/*.swift
+swiftc -g -o main *.swift Actions/*.swift

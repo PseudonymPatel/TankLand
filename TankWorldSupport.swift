@@ -107,8 +107,15 @@ extension TankWorld {
 
 	//find all tanks
 	func findAllTanks() -> [Tank] {
-		let GOs = findAllGameObjects()
-		let tanks = GOs.filter{$0.objectType == .Tank}
+		var tanks = randomizeGameObjects(gameObjects: findAllGameObjects())//.map {$0 as! Tank}
+		var n = 0
+		while n < tanks.count {
+			if(tanks[n].objectType == .Mine || tanks[n].objectType == .Rover) {
+				tanks.remove(at: n)
+				continue
+			}
+			n += 1
+		}
 		return tanks as! [Tank]
 	}
 
