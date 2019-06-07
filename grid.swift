@@ -15,6 +15,9 @@ class Grid {
 	//you may set this to true if you would like all the boxes to have a coordinate in it.
 	private let coordsInEveryBox:Bool = false
 
+	//the special text formatting colors for tank labels
+	private let SPECIAL_TEXT_TYPE:String = "1;5"
+	private let SPECIAL_TEXT_COLOR:String = "32"
 	//Height and width of the grid - amount of elements per row/col
 	private let GRID_HEIGHT:Int = 15
 	private let GRID_WIDTH:Int = 15
@@ -141,14 +144,19 @@ class Grid {
 						// 2nd line - coordinates
 						switch line {
 							case 0: //display health
-									tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
+								tempLine += (" "*(HORIZONTAL_SPACING - String(object.energy).count) + String	(object.energy)) //the energy plus how ever many extra spaces are needed.
 
 							case 1://display name
+								if object.objectType != .Tank {
 									tempLine += (" " + object.id + " "*((HORIZONTAL_SPACING - 1) - 	object.id.count)) //the name plus how ever many extra spaces are needed.
-
+								} else {
+									let formatting:String = " \u{001B}[\(SPECIAL_TEXT_TYPE);\(SPECIAL_TEXT_COLOR)m"
+									let endFormat:String = "\u{001B}[0m"
+									tempLine += (formatting + object.id + " "*((HORIZONTAL_SPACING - 1) - object.id.count) + endFormat)
+								}
 							case 2: //display the position on the grid
-									let coords = "(\(row),\(col))" // pulls from the for loops
-									tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
+								let coords = "(\(row),\(col))" // pulls from the for loops
+								tempLine += (" " + coords + " "*((HORIZONTAL_SPACING - 1) - coords.count))
 							default: //if it is not the first or second line, put blank spaces.
 								tempLine += (" "*HORIZONTAL_SPACING)
 						}

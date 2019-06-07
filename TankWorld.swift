@@ -1,3 +1,5 @@
+import Glibc //wow also just for credits
+import Foundation //just for the credits lol
 /*
 *	This file contains only the TankWorld class.
 *
@@ -54,20 +56,20 @@ class TankWorld {
 
 		//our tanks
 		var randEmpty = getRandomEmptyPosition()
-		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"SHEE", instructions:"THIS TANK SUCKS"))
+		//addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"SHEE", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
-		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"DION", instructions:"THIS TANK SUCKS"))
+		//addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"DION", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
-		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"OTHE", instructions:"THIS TANK SUCKS"))
+		//addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"OTHE", instructions:"THIS TANK SUCKS"))
 
 		//jtanks
 		randEmpty = getRandomEmptyPosition()
-		addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"PALT", instructions:"THIS TANK SUCKS"))
+		//addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"PALT", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
-		addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"TLAP", instructions:"THIS TANK SUCKS"))
+		//addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"TLAP", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
 		addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"LAPT", instructions:"THIS TANK SUCKS"))
@@ -108,7 +110,9 @@ class TankWorld {
 		if isDead(tank) {
 			logger.addLog(tank, "\u{001B}[7;33m   THE GameObject HAS DIED REEEEEEEEEEEEEEEEEEEEEEEEE   \u{001B}[0;00m")
 			grid[tank.position.row][tank.position.col] = nil
-			livingTanks -= 1
+			if tank.objectType == .Tank {
+				livingTanks -= 1
+			}
 		}
 
 		if findAllTanks().count == 1 {
@@ -216,6 +220,7 @@ class TankWorld {
 
 			//in case this mine just killed the last tank
 			if gameOver {
+				print(logger.getTurnLog())
 				return
 			}
 		}
@@ -241,6 +246,7 @@ class TankWorld {
 			handleMissile(tank:tank as! Tank)
 			handleMove(tank:tank as! Tank)
 			if gameOver {
+				print(logger.getTurnLog())
 				return
 			}
 		}
@@ -278,7 +284,7 @@ class TankWorld {
 						displayGrid()
 					}
 
-					guard findAllTanks().count == 0 else {
+					guard findAllTanks().count == 1 else {
 						fatalError("no or too many living tanks at the end: \(findAllTanks().count)")
 					}
 
@@ -313,5 +319,63 @@ class TankWorld {
 		} while !gameOver
 
 		print("\n\u{001B}[7;34m** WINNER IS \(lastLivingTank!) **\u{001B}[0;00m")
+
+			// :) a treat if you run the executable
+		let commands = CommandLine.arguments
+		guard commands.count > 1 else {
+			print(":)")
+			return
+		}
+
+		func swish() {
+			print("\u{001B}[1;35;104m#####################\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m-########---########-\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m--######-----######--\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m---####-------####---\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m----##---------##----\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m---------------------\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+		}
+
+		if commands[1] == "exec" {
+			//do the cool stuff
+			print("\n\n\u{001B}[2A",terminator:"")
+			print("\u{001B}[1;93;104m       CREDITS       \u{001B}[0m")
+			print("\u{001B}[1;93;104m                     \u{001B}[0m")
+			print("\u{001B}[1;93;104m                     \u{001B}[0m",terminator:"")
+			print("\u{001B}[1A\u{001B}[25D",terminator:"")
+			swish()
+			for _ in 0..<1 {
+				print("\u{001B}[1;35;104m     Sheen Patel     \u{001B}[0m",terminator:"")
+				print("\u{001B}[25D",terminator:"")
+				fflush(stdout)
+				sleep(3)
+				swish()
+				print("\u{001B}[1;35;104m      Dion Chen      \u{001B}[0m",terminator:"")
+				print("\u{001B}[25D",terminator:"")
+				fflush(stdout)
+				sleep(3)
+				swish()
+				print("\u{001B}[1;35;104m Mr. Pali - debugger \u{001B}[0m",terminator:"")
+				print("\u{001B}[25D",terminator:"")
+				fflush(stdout)
+				sleep(3)
+				swish()
+			}
+		}
+		print("\u{001B}[1A",terminator:"")
+		print("\u{001B}[1;37;3m HAVE A GREAT SUMMER!\u{001B}[0m")
+		print("\u{001B}[1;30;104m         :)          \u{001B}[0m\u{001B}[1B\u{001B}[21C")
 	}
 }
