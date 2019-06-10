@@ -360,7 +360,7 @@ class TankWorld {
 				fflush(stdout)
 				sleep(3)
 				swish()
-				print("\u{001B}[1;35;104m      Dion Chen      \u{001B}[0m",terminator:"")
+				print("\u{001B}[1;35;104m      Deon Chan      \u{001B}[0m",terminator:"")
 				print("\u{001B}[25D",terminator:"")
 				fflush(stdout)
 				sleep(3)
