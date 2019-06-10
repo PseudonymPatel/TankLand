@@ -206,7 +206,7 @@ extension TankWorld {
 		var convert = [RadarResult]()
 
 		for i in results {
-			convert.append(RadarResult(position:i, id:grid[i.row][i.col]!.id, energy:grid[i.row][i.col]!.energy))
+			convert.append(RadarResult(position:i, id:grid[i.row][i.col]!.id, energy:grid[i.row][i.col]!.energy, objectType:grid[i.row][i.col]!.objectType))
 		}
 
 		//set the tank's property to this.

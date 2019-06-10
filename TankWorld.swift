@@ -56,20 +56,20 @@ class TankWorld {
 
 		//our tanks
 		var randEmpty = getRandomEmptyPosition()
-		//addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"SHEE", instructions:"THIS TANK SUCKS"))
+		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"SHEE", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
-		//addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"DION", instructions:"THIS TANK SUCKS"))
+		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"DION", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
-		//addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"OTHE", instructions:"THIS TANK SUCKS"))
+		addGameObject(OurTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"OTHE", instructions:"THIS TANK SUCKS"))
 
 		//jtanks
 		randEmpty = getRandomEmptyPosition()
-		//addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"PALT", instructions:"THIS TANK SUCKS"))
+		addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"PALT", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
-		//addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"TLAP", instructions:"THIS TANK SUCKS"))
+		addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"TLAP", instructions:"THIS TANK SUCKS"))
 
 		randEmpty = getRandomEmptyPosition()
 		addGameObject(JTank(row:randEmpty.row, col:randEmpty.col, energy:100000, id:"LAPT", instructions:"THIS TANK SUCKS"))
@@ -173,8 +173,6 @@ class TankWorld {
 			}
 			n += 1
 		}
-
-		//let rovers = randomizeGameObjects(gameObjects: findAllRovers()) //fails on this goddamn line
 
 		for tank in tanks {
 			let t = tank as! Tank
