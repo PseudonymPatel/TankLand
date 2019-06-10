@@ -117,7 +117,14 @@ extension TankWorld {
 		//if there is a mine/rover there:
 		if let mine = grid[position.row][position.col] {
 			logger.addLog(tank, "about to hit mine or rover")
-			tank.energy -= mine.energy * Constants.mineStrikeMultiple
+			if tank.shields < mine.energy * Constants.mineStrikeMultiple {
+				let os = tank.shields
+				tank.shields = 0
+				tank.energy -= (mine.energy * Constants.mineStrikeMultiple) - os
+			} else {
+				tank.shields -= mine.energy * Constants.mineStrikeMultiple
+			}
+
 			if isDead(tank) {
 				doDeathStuff(tank)
 			} else {
@@ -175,13 +182,50 @@ extension TankWorld {
 		let surrounding = getLegalSurroundingPositions(target)
 		//drain energy.
 		if !isPositionEmpty(target) {
-			grid[target.row][target.col]!.energy -= missileAction.power * Constants.missileStrikeMultiple
+			let object = grid[target.row][target.col]!
+			let objEnergy = object.energy
+			if object.objectType != .Tank {
+				object.energy -= missileAction.power * Constants.missileStrikeMultiple
+			} else {
+				let subtract = missileAction.power * Constants.missileStrikeMultiple
+				let tank = object as! Tank
+				if tank.shields < subtract {
+					let os = tank.shields
+					tank.shields = 0
+					tank.energy -= (subtract) - os
+				} else {
+					tank.shields -= subtract
+				}
+			}
+			if isDead(object) && object.objectType == .Tank {
+				//siphon energy -_-
+				//imma just zucc this energy thankyouverymuch
+				tank.energy += objEnergy / Constants.missileStrikeEnergyTransferFraction
+			}
 			doDeathStuff(grid[target.row][target.col]!)
 		}
 
 		for location in surrounding {
 			if !isPositionEmpty(location) {
-				grid[location.row][location.col]!.energy -= missileAction.power * Constants.missileStrikeMultipleCollateral
+				let object = grid[location.row][location.col]!
+				let objEnergy = object.energy
+				if object.objectType != .Tank {
+					object.energy -= missileAction.power * Constants.missileStrikeMultipleCollateral
+				} else {
+					let subtract = missileAction.power * Constants.missileStrikeMultipleCollateral
+					let tank = object as! Tank
+					if tank.shields < subtract {
+						let os = tank.shields
+						tank.shields = 0
+						tank.energy -= (subtract) - os
+					} else {
+						tank.shields -= subtract
+					}
+				}
+				if isDead(object) && object.objectType == .Tank {
+					// **sips energy**
+					tank.energy += objEnergy / Constants.missileStrikeEnergyTransferFraction
+				}
 				doDeathStuff(grid[location.row][location.col]!)
 			}
 		}

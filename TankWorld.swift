@@ -203,7 +203,19 @@ class TankWorld {
 				rover.energy -= Constants.costOfMovingRover
 				if let killObj = grid[position.row][position.col] {
 					grid[rover.position.row][rover.position.col] = nil //remove rover
-					killObj.energy -= rover.energy //take away energy
+					if killObj.objectType != .Tank {
+						killObj.energy -= rover.energy //take away energy
+					} else {
+						let obj = killObj as! Tank
+						let minus = rover.energy
+						if obj.shields < minus {
+							let o = obj.shields
+							obj.shields = 0
+							obj.energy -= minus - o
+						} else {
+							obj.shields -= minus
+						}
+					}
 					doDeathStuff(killObj) //see if ded. will remove if ded
 				} else {
 					//nothing, so move.
@@ -253,6 +265,7 @@ class TankWorld {
 			let t = tank as! Tank
 			t.preActions = [:]
 			t.postActions = [:]
+			t.shields = 0
 		}
 
 		print(logger.getTurnLog())
