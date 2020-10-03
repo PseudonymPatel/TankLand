@@ -337,55 +337,55 @@ class TankWorld {
 			return
 		}
 
-//		func swish() {
-//			print("\u{001B}[1;35;104m#####################\u{001B}[25D",terminator:"")
-//			fflush(stdout)
-//			sleep(1)
-//			print("\u{001B}[1;35;104m-########---########-\u{001B}[25D",terminator:"")
-//			fflush(stdout)
-//			sleep(1)
-//			print("\u{001B}[1;35;104m--######-----######--\u{001B}[25D",terminator:"")
-//			fflush(stdout)
-//			sleep(1)
-//			print("\u{001B}[1;35;104m---####-------####---\u{001B}[25D",terminator:"")
-//			fflush(stdout)
-//			sleep(1)
-//			print("\u{001B}[1;35;104m----##---------##----\u{001B}[25D",terminator:"")
-//			fflush(stdout)
-//			sleep(1)
-//			print("\u{001B}[1;35;104m---------------------\u{001B}[25D",terminator:"")
-//			fflush(stdout)
-//			sleep(1)
-//		}
-//
-//		if commands[1] == "exec" {
-//			//do the cool stuff
-//			print("\n\n\u{001B}[2A",terminator:"")
-//			print("\u{001B}[1;93;104m       CREDITS       \u{001B}[0m")
-//			print("\u{001B}[1;93;104m                     \u{001B}[0m")
-//			print("\u{001B}[1;93;104m                     \u{001B}[0m",terminator:"")
-//			print("\u{001B}[1A\u{001B}[25D",terminator:"")
-//			swish()
-//			for _ in 0..<1 {
-//				print("\u{001B}[1;35;104m     Sheen Patel     \u{001B}[0m",terminator:"")
-//				print("\u{001B}[25D",terminator:"")
-//				fflush(stdout)
-//				sleep(3)
-//				swish()
-//				print("\u{001B}[1;35;104m      Deon Chan      \u{001B}[0m",terminator:"")
-//				print("\u{001B}[25D",terminator:"")
-//				fflush(stdout)
-//				sleep(3)
-//				swish()
-//				print("\u{001B}[1;35;104m Mr. Pali - debugger \u{001B}[0m",terminator:"")
-//				print("\u{001B}[25D",terminator:"")
-//				fflush(stdout)
-//				sleep(3)
-//				swish()
-//			}
-//		}
-//		print("\u{001B}[1A",terminator:"")
-//		print("\u{001B}[1;37;3m HAVE A GREAT SUMMER!\u{001B}[0m")
-//		print("\u{001B}[1;30;104m         :)          \u{001B}[0m\u{001B}[1B\u{001B}[21C")
+		func swish() {
+			print("\u{001B}[1;35;104m#####################\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m-########---########-\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m--######-----######--\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m---####-------####---\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m----##---------##----\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+			print("\u{001B}[1;35;104m---------------------\u{001B}[25D",terminator:"")
+			fflush(stdout)
+			sleep(1)
+		}
+
+		if commands[1] == "exec" {
+			//do the cool stuff
+			print("\n\n\u{001B}[2A",terminator:"")
+			print("\u{001B}[1;93;104m       CREDITS       \u{001B}[0m")
+			print("\u{001B}[1;93;104m                     \u{001B}[0m")
+			print("\u{001B}[1;93;104m                     \u{001B}[0m",terminator:"")
+			print("\u{001B}[1A\u{001B}[25D",terminator:"")
+			swish()
+			for _ in 0..<1 {
+				print("\u{001B}[1;35;104m     Sheen Patel     \u{001B}[0m",terminator:"")
+				print("\u{001B}[25D",terminator:"")
+				fflush(stdout)
+				sleep(3)
+				swish()
+				print("\u{001B}[1;35;104m      Deon Chan      \u{001B}[0m",terminator:"")
+				print("\u{001B}[25D",terminator:"")
+				fflush(stdout)
+				sleep(3)
+				swish()
+				print("\u{001B}[1;35;104m Mr. Pali - debugger \u{001B}[0m",terminator:"")
+				print("\u{001B}[25D",terminator:"")
+				fflush(stdout)
+				sleep(3)
+				swish()
+			}
+		}
+		print("\u{001B}[1A",terminator:"")
+		print("\u{001B}[1;37;3m HAVE A GREAT SUMMER!\u{001B}[0m")
+		print("\u{001B}[1;30;104m         :)          \u{001B}[0m\u{001B}[1B\u{001B}[21C")
 	}
 }
